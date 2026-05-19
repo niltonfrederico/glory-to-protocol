@@ -1,0 +1,37 @@
+# planning/ é sandbox — snapshot entra as-is mas não vai pro repo.
+planning/
+
+# Standard
+.env
+.env.*
+!.env.example
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.ty_cache/
+.mypy_cache/
+build/
+dist/
+*.egg-info/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# AI
+.claude/
+CLAUDE.md
+.remember/
