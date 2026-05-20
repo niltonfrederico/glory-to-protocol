@@ -1,4 +1,4 @@
-"""Vitrine dos componentes visuais do bureau.
+"""Showcase of the bureau's visual components.
 
 Run with: `uv run protocol-showcase [logo|palette|wrap|jobs|stamps]`.
 """
@@ -29,14 +29,14 @@ DEFAULT_LOG_DIR = Path("logs")
 
 SaveOption = Annotated[
     bool,
-    typer.Option("--save", "-s", help="Salvar saída em arquivo além de exibir."),
+    typer.Option("--save", "-s", help="Save output to file in addition to displaying."),
 ]
 PathOption = Annotated[
     Path | None,
     typer.Option(
         "--path",
         "-p",
-        help="Caminho do arquivo de saída (usado quando --save). Default: logs/tui-<timestamp>.txt",
+        help="Output file path (used with --save). Default: logs/tui-<timestamp>.txt",
     ),
 ]
 
@@ -46,32 +46,32 @@ async def _fake_job(seconds: float) -> None:
 
 
 def _render_logo(form: Form) -> None:
-    form.line("Logo grande:", style=theme.HEADER)
+    form.line("Large logo:", style=theme.HEADER)
     for row in LOGO_LARGE.splitlines():
         form.line(row, style=theme.HEADER)
     form.line()
-    form.line("Logo pequena:", style=theme.HEADER)
+    form.line("Small logo:", style=theme.HEADER)
     for row in LOGO_SMALL.splitlines():
         form.line(row, style=theme.CYRILLIC_ACCENT)
 
 
 def _render_palette(form: Form) -> None:
-    form.line("Paleta de estilos:", style=theme.HEADER)
-    form.line("BODY — texto padrão do relatório.", style=theme.BODY)
-    form.line("MUTED — anotação lateral, contexto secundário.", style=theme.MUTED)
-    form.line("CYRILLIC_ACCENT — destaque oficial.", style=theme.CYRILLIC_ACCENT)
-    form.line("SIGNATURE — assinatura ao pé.", style=theme.SIGNATURE)
+    form.line("Style palette:", style=theme.HEADER)
+    form.line("BODY — default report body text.", style=theme.BODY)
+    form.line("MUTED — side note, secondary context.", style=theme.MUTED)
+    form.line("CYRILLIC_ACCENT — official accent.", style=theme.CYRILLIC_ACCENT)
+    form.line("SIGNATURE — footer signature.", style=theme.SIGNATURE)
 
 
 def _render_wrap(form: Form) -> None:
-    form.line("Quebra de linha — alfabeto latino:", style=theme.HEADER)
+    form.line("Line wrap — Latin alphabet:", style=theme.HEADER)
     form.line(
         "Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod "
         "tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam.",
         style=theme.BODY,
     )
     form.line()
-    form.line("Quebra de linha — alfabeto cirílico:", style=theme.HEADER)
+    form.line("Line wrap — Cyrillic alphabet:", style=theme.HEADER)
     form.line(
         "Бюро вычислительной техники регистрирует входящие директивы Генсека "
         "и обеспечивает их исполнение в установленные сроки без задержек "
@@ -79,20 +79,20 @@ def _render_wrap(form: Form) -> None:
         style=theme.BODY,
     )
     form.line()
-    form.line("Quebra de linha — misto latino + cirílico:", style=theme.HEADER)
+    form.line("Line wrap — Latin + Cyrillic mix:", style=theme.HEADER)
     form.line(
-        "Norman, Директор NIRVYTEKH, recebeu directive #4711 do Gensek sobre "
-        "распределение бюджета entre as quatro diretorias internas do bureau "
-        "para o próximo período контроля.",
+        "Norman, Директор of NIRVYTEKH, received directive #4711 from the Gensek "
+        "about распределение бюджета between the bureau's four internal directorates "
+        "for the next контроля period.",
         style=theme.BODY,
     )
 
 
 def _render_jobs(form: Form) -> None:
-    form.line("Jobs em background (live region):", style=theme.HEADER)
+    form.line("Background jobs (live region):", style=theme.HEADER)
     jobs = [
         Job(
-            label="compilando relatório para o Gensek",
+            label="compiling report for the Gensek",
             coro_factory=lambda: _fake_job(5.0),
         ),
     ]
@@ -100,14 +100,14 @@ def _render_jobs(form: Form) -> None:
 
 
 def _render_stamps(form: Form) -> None:
-    form.stamp(stamp_approve("orçamento Q2", "auditoria sem ressalvas"))
-    form.stamp(stamp_reject("requisição #4711", "fora do escopo do bureau"))
-    form.stamp(stamp_order("mobilização equipe 3", "execução imediata"))
-    form.stamp(stamp_review("relatório mensal", "pendente leitura do Gensek"))
+    form.stamp(stamp_approve("Q2 budget", "audit clean"))
+    form.stamp(stamp_reject("request #4711", "out of bureau scope"))
+    form.stamp(stamp_order("team 3 mobilization", "immediate execution"))
+    form.stamp(stamp_review("monthly report", "awaiting Gensek review"))
 
 
 def _render_all(form: Form) -> None:
-    form.line("Demonstração dos componentes visuais do bureau.", style=theme.MUTED)
+    form.line("Demonstration of the bureau's visual components.", style=theme.MUTED)
     form.line()
     _render_logo(form)
     form.line()
@@ -140,11 +140,11 @@ def _run(title: str, render: Callable[[Form], None], save: bool, path: Path | No
 
 
 COMPONENTS: dict[str, tuple[str, Callable[[Form], None]]] = {
-    "logo": ("Logo grande e pequena.", _render_logo),
-    "palette": ("Paleta de estilos do theme.", _render_palette),
-    "wrap": ("Quebra de linha em latino, cirílico e misto.", _render_wrap),
-    "jobs": ("Jobs em background (live region ticker).", _render_jobs),
-    "stamps": ("Carimbos APPROVE / REJECT / ORDER / REVIEW.", _render_stamps),
+    "logo": ("Large and small logo.", _render_logo),
+    "palette": ("Theme style palette.", _render_palette),
+    "wrap": ("Line wrapping in Latin, Cyrillic and mixed.", _render_wrap),
+    "jobs": ("Background jobs (live region ticker).", _render_jobs),
+    "stamps": ("APPROVE / REJECT / ORDER / REVIEW stamps.", _render_stamps),
 }
 
 app = typer.Typer(add_completion=False, no_args_is_help=False)
@@ -156,7 +156,7 @@ def default(
     save: SaveOption = False,
     path: PathOption = None,
 ) -> None:
-    """Renderiza componentes de TUI. Sem subcomando, mostra tudo."""
+    """Render TUI components. Without a subcommand, shows everything."""
     if ctx.invoked_subcommand is not None:
         return
     _run("tui showcase", _render_all, save, path)
