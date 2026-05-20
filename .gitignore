@@ -8,6 +8,7 @@ planning/
 .env
 .env.*
 !.env.example
+.secrets
 *.db
 *.db-journal
 *.db-wal

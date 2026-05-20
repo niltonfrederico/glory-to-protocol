@@ -6,6 +6,13 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/niltonfrederico/glory-to-protocol/actions/workflows/ci.yml"><img src="https://github.com/niltonfrederico/glory-to-protocol/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://pypi.org/project/glory-to-protocol/"><img src="https://img.shields.io/pypi/v/glory-to-protocol.svg" alt="PyPI"></a>
+  <a href="https://pypi.org/project/glory-to-protocol/"><img src="https://img.shields.io/pypi/pyversions/glory-to-protocol.svg" alt="Versões de Python"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-AGPL--3.0--or--later-blue.svg" alt="Licença: AGPL-3.0-or-later"></a>
+</p>
+
+<p align="center">
   <img src="assets/svg/header-pt-br.svg" alt="glory-to-protocol — Bureau de Tecnologia Computacional" width="880">
 </p>
 
