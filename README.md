@@ -5,6 +5,10 @@
 
 ## СВОДКА · TL;DR
 
+<p align="center">
+  <img src="assets/showcase.gif" alt="protocol-showcase — all TUI components rendered" width="900">
+</p>
+
 ## ОГЛАВЛЕНИЕ · Index
 
 - [СВОДКА · TL;DR](#сводка--tldr)
@@ -16,6 +20,8 @@
 - [ПОЛЕ № 5 · Status](#поле--5--status)
 - [ПОЛЕ № 6 · Roadmap](#поле--6--roadmap)
 - [ОТКАЗ · Disclaimer](#отказ--disclaimer)
+- [ВКЛАД · Contributing](CONTRIBUTING.md)
+- [ЛИЦЕНЗИЯ · License](LICENSE)
 
 ## ПОЛЕ № 1 · Purpose
 
