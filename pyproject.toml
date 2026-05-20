@@ -26,14 +26,28 @@ dev = [
     "pytest>=8.0",
     "ruff>=0.6",
     "pre-commit>=3.7",
+    "ty>=0.0.38",
+    "pytest-cov>=7.1.0",
+    "pytest-deadfixtures>=3.1.0",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "-m 'not real'"
+addopts = "-m 'not real' --cov=glory_to_protocol --cov-report=term-missing --cov-fail-under=98"
 markers = [
     "real: hits live resources or real backends; skipped by default.",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["src/glory_to_protocol"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
 ]
 
 [tool.ruff]

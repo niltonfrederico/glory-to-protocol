@@ -5,3 +5,19 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty (type check)
+        entry: uv run ty check
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pytest-deadfixtures
+        name: pytest-deadfixtures
+        entry: uv run pytest --dead-fixtures
+        language: system
+        types: [python]
+        pass_filenames: false

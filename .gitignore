@@ -39,5 +39,8 @@ dist/
 CLAUDE.md
 .remember/
 
+# Pytest
+.coverage
+
 # Glory to Protocol
 logs/

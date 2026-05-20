@@ -4,6 +4,7 @@ import asyncio
 
 from glory_to_protocol.jobs.runner import JobRunner
 from glory_to_protocol.jobs.types import Job
+from glory_to_protocol.jobs.types import JobOutcome
 
 
 def test_should_collect_two_ok_outcomes_when_both_jobs_succeed() -> None:
@@ -34,7 +35,7 @@ def test_should_mark_only_failing_job_when_one_raises() -> None:
         async with JobRunner() as runner:
             runner.spawn(Job("ok-job", ok))
             runner.spawn(Job("bad-job", boom))
-        outcomes = [(o.label, o.status) for o in runner.outcomes]
+        outcomes: list[tuple[str, str]] = [(o.label, o.status) for o in runner.outcomes]
         err = next(o.error for o in runner.outcomes if o.status == "fail")
         return outcomes, err
 
@@ -69,7 +70,7 @@ def test_should_flip_handle_status_when_job_finishes() -> None:
 
 
 def test_should_return_empty_outcomes_when_no_jobs_spawned() -> None:
-    async def scenario() -> list[object]:
+    async def scenario() -> list[JobOutcome]:
         async with JobRunner() as runner:
             pass
         return runner.outcomes

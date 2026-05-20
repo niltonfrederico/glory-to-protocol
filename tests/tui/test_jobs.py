@@ -6,6 +6,7 @@ from rich.console import Console
 
 from glory_to_protocol.jobs.runner import JobHandle
 from glory_to_protocol.jobs.types import Job
+from glory_to_protocol.jobs.types import JobOutcome
 from glory_to_protocol.tui import theme
 from glory_to_protocol.tui.forms import Form
 from glory_to_protocol.tui.jobs import render_pending_region
@@ -88,7 +89,7 @@ def test_should_complete_run_pending_when_fake_job_finishes() -> None:
 def test_should_return_empty_outcomes_when_no_jobs_passed_to_run_pending() -> None:
     console = Console(record=True, width=theme.FORM_WIDTH, force_terminal=False)
 
-    async def scenario() -> list[object]:
+    async def scenario() -> list[JobOutcome]:
         with Form(title="t", console=console, show_header=False) as form:
             return await form.run_pending([])
 
