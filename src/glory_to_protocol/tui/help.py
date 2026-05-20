@@ -156,14 +156,14 @@ def _print_right_aligned_stamp(console: Console) -> None:
         console.print(text)
 
 
-class NormanTyperGroup(TyperGroup):
+class ProtocolTyperGroup(TyperGroup):
     """TyperGroup that renders --help via the bureau TUI."""
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:
         render_norman_help(ctx)
 
 
-class NormanTyperCommand(TyperCommand):
+class ProtocolTyperCommand(TyperCommand):
     """TyperCommand variant that renders --help via the bureau TUI."""
 
     def format_help(self, ctx: click.Context, formatter: click.HelpFormatter) -> None:

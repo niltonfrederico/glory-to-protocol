@@ -2,28 +2,28 @@ from typing import Any
 
 import typer
 
-from glory_to_protocol.tui.help import NormanTyperCommand
-from glory_to_protocol.tui.help import NormanTyperGroup
+from glory_to_protocol.tui.help import ProtocolTyperCommand
+from glory_to_protocol.tui.help import ProtocolTyperGroup
 
 
-class NormanTyper(typer.Typer):
+class ProtocolTyper(typer.Typer):
     """Typer flavor that themes both groups and leaf commands via the bureau TUI."""
 
     def command(self, *args: Any, **kwargs: Any) -> Any:
-        kwargs.setdefault("cls", NormanTyperCommand)
+        kwargs.setdefault("cls", ProtocolTyperCommand)
         return super().command(*args, **kwargs)
 
 
-def make_app(**kwargs: Any) -> NormanTyper:
-    """Build a NormanTyper app that prints --help instead of erroring on no args.
+def make_app(**kwargs: Any) -> ProtocolTyper:
+    """Build a ProtocolTyper app that prints --help instead of erroring on no args.
 
     Use this for every command namespace (root and sub-apps) so the UX is
     consistent: invoking the app or a sub-app with nothing else shows the
     help for that level. Help itself is rendered via the bureau's TUI.
     """
     kwargs.setdefault("no_args_is_help", True)
-    kwargs.setdefault("cls", NormanTyperGroup)
-    return NormanTyper(**kwargs)
+    kwargs.setdefault("cls", ProtocolTyperGroup)
+    return ProtocolTyper(**kwargs)
 
 
-__all__ = ["NormanTyper", "NormanTyperCommand", "NormanTyperGroup", "make_app"]
+__all__ = ["ProtocolTyper", "ProtocolTyperCommand", "ProtocolTyperGroup", "make_app"]
