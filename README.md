@@ -1,8 +1,11 @@
-# glory-to-protocol
-
+<!-- markdownlint-disable MD041 -->
 <p align="center">
-  <img src="assets/header.svg" alt="glory-to-protocol — Bureau of Computational Technology" width="880">
+  <img src="assets/header-en-us.svg" alt="glory-to-protocol — Bureau of Computational Technology" width="880">
 </p>
+
+## (TL;DR em cirilico) tl;dr
+
+## Indice
 
 ## ПОЛЕ № 1 · Purpose
 
@@ -24,8 +27,4 @@ _TBD_
 
 _TBD_
 
-```text
-                ╔═══════════╗   ОДОБРЕНО / APPROVED
-                ║  Protocol ║   README · public release
-                ╚═══════════╝   2026-05-20 UTC
-```
+## Disclaimer

@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 320" role="img"
+  aria-label="glory-to-protocol — Bureau NIRVYTEKH">
+  <title>glory-to-protocol — Bureau NIRVYTEKH (Bureau of Computational Technology)</title>
+  <defs>
+    <style>
+      .bg     { fill: #16181d; }
+      .border { stroke: #7a7a7a; stroke-width: 2; fill: none; }
+      .tab    { fill: #16181d; stroke: #7a7a7a; stroke-width: 2; }
+      .tab-tx { font: 600 12px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #6c7a89; letter-spacing: 1.5px; }
+      .logo   { font: 700 64px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #d4af37; letter-spacing: 6px; }
+      .star   { font: 700 22px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #c0392b; }
+      .title  { font: 700 16px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #c0392b; letter-spacing: 2px; }
+      .meta   { font: 400 13px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #e6e6e6; }
+      .muted  { fill: #6c7a89; }
+      .rule   { font: 600 12px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #6c7a89; letter-spacing: 3px; }
+      .stamp-ring    { fill: none; stroke: #c0392b; stroke-width: 4; opacity: 0.85; }
+      .stamp-ring-in { fill: none; stroke: #c0392b; stroke-width: 2; opacity: 0.85; }
+      .stamp-arc-tx  { font: 700 20px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #c0392b; letter-spacing: 4px; opacity: 0.85; }
+      .stamp-arc-sm  { font: 600 16px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #c0392b; letter-spacing: 3px; opacity: 0.85; }
+      .stamp-star    { font: 700 56px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #c0392b; opacity: 0.85; }
+      .stamp-center  { font: 700 14px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #c0392b; letter-spacing: 2px; opacity: 0.85; }
+      .stamp-lic     { font: 600 12px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #c0392b; letter-spacing: 3px; opacity: 0.85; }
+    </style>
+    <path id="stamp-arc-top" d="M 40,160 A 120,120 0 0 1 280,160" />
+    <path id="stamp-arc-bot" d="M 50,160 A 110,110 0 0 0 270,160" />
+
+    <filter id="stamp-ink-strong" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="5" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" result="disp" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="3" seed="9" result="grain" />
+      <feColorMatrix in="grain" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.4" result="grainAlpha" />
+      <feComposite in="disp" in2="grainAlpha" operator="in" />
+    </filter>
+
+    <filter id="stamp-ink-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="5" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" result="disp" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="11" result="grain" />
+      <feColorMatrix in="grain" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.15" result="grainAlpha" />
+      <feComposite in="disp" in2="grainAlpha" operator="in" />
+    </filter>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="880" height="320" rx="4" />
+
+  <rect class="border" x="10" y="10" width="860" height="300" rx="2" />
+
+  <rect class="tab" x="30" y="0" width="240" height="22" />
+  <text class="tab-tx" x="40" y="16">ДОКУМЕНТ № 001 · README</text>
+
+  <text class="logo" text-anchor="middle" x="440" y="110">PROTOCOL</text>
+
+  <text class="star" text-anchor="middle" x="440" y="148">★</text>
+
+  <text class="title" text-anchor="middle" x="440" y="178">
+    Bureau of Computational Technology
+  </text>
+  <text class="meta" text-anchor="middle" x="440" y="196" style="font-size: 11px;">
+    <tspan class="muted">Нирская Вычислительная Техника</tspan>
+  </text>
+
+  <text class="meta" text-anchor="middle" x="440" y="215">
+    <tspan class="muted">Директор:</tspan> Норман <tspan class="muted"> · Дата:</tspan> 2026-05-20 <tspan
+      class="muted"> · Сессия:</tspan> #public </text>
+
+  <line x1="280" y1="255" x2="380" y2="255" stroke="#6c7a89" stroke-width="1" />
+  <text class="rule" text-anchor="middle" x="440" y="259">ОФИЦИАЛЬНО</text>
+  <line x1="500" y1="255" x2="600" y2="255" stroke="#6c7a89" stroke-width="1" />
+
+  <g transform="translate(616 150) rotate(-24) scale(0.62) translate(-160 -160)">
+    <g filter="url(#stamp-ink-strong)">
+      <circle class="stamp-ring"    cx="160" cy="160" r="140" />
+      <circle class="stamp-ring"    cx="160" cy="160" r="120" />
+      <circle class="stamp-ring-in" cx="160" cy="160" r="112" />
+      <text class="stamp-star" text-anchor="middle" x="160" y="150">★</text>
+    </g>
+    <g filter="url(#stamp-ink-soft)">
+      <text class="stamp-arc-tx">
+        <textPath href="#stamp-arc-top" startOffset="50%" text-anchor="middle">ДОСТОЯНИЕ НАРОДА</textPath>
+      </text>
+      <text class="stamp-arc-sm">
+        <textPath href="#stamp-arc-bot" startOffset="50%" text-anchor="middle">PROPERTY OF THE PEOPLE</textPath>
+      </text>
+      <text class="stamp-center" text-anchor="middle" x="160" y="180">PROTOCOL</text>
+      <text class="stamp-lic"    text-anchor="middle" x="160" y="202">AGPL-3.0</text>
+    </g>
+  </g>
+</svg>
