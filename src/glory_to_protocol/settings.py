@@ -1,15 +1,15 @@
-from typing import Annotated
 from typing import Self
 
-from pydantic import AfterValidator
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import computed_field
 from pydantic import model_validator
 from pydantic_settings import BaseSettings
+from pydantic_settings import SettingsConfigDict
 
-from src.glory_to_protocol.tui import _ascii
-from src.glory_to_protocol.validations import validate_allowed_characters
+from glory_to_protocol.tui import _ascii
+from glory_to_protocol.tui.exceptions import InvalidASCIICharactersError
+from glory_to_protocol.validators.base import has_disallowed_characters
 
 _DEFAULT_APP_NAME = "Protocol"
 
@@ -29,17 +29,20 @@ class ASCIISettings(BaseModel):
 class ProtocolSettings(BaseSettings):
     app_name: str = Field(_DEFAULT_APP_NAME)
     logo_text: str = Field(_DEFAULT_APP_NAME)
+    small_logo_text: str = Field(_DEFAULT_APP_NAME)
 
     ascii: ASCIISettings = ASCIISettings()
 
-    class Config:
-        env_prefix = "PROTOCOL_"
+    model_config = SettingsConfigDict(env_prefix="PROTOCOL_")
 
     @model_validator(mode="after")
-    def validate_logo_text_characters(self) -> "Self":
-        """
-        Validates that all characters in `logo_text` are present in the `allowed_characters`
-        defined by the `ASCIISettings`.
-        """
-        validate_allowed_characters(self.logo_text, self.ascii.allowed_characters)
+    def validate_logo_text_characters(self) -> Self:
+        is_valid, disallowed_chars = has_disallowed_characters(
+            self.logo_text.upper(), self.ascii.allowed_characters
+        )
+        if not is_valid:
+            raise InvalidASCIICharactersError(disallowed_chars)
         return self
+
+
+settings = ProtocolSettings()

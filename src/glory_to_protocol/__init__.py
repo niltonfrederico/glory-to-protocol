@@ -2,7 +2,6 @@ from glory_to_protocol.tui import LOGO_LARGE
 from glory_to_protocol.tui import LOGO_SMALL
 from glory_to_protocol.tui import Form
 from glory_to_protocol.tui import render_header
-from glory_to_protocol.tui import render_logo
 from glory_to_protocol.tui import stamp_approve
 from glory_to_protocol.tui import stamp_order
 from glory_to_protocol.tui import stamp_reject
@@ -22,7 +21,6 @@ __all__ = [
     "NormanTyperGroup",
     "make_app",
     "render_header",
-    "render_logo",
     "stamp_approve",
     "stamp_order",
     "stamp_reject",

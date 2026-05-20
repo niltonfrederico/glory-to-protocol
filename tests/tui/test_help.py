@@ -36,7 +36,7 @@ def _bureau_app() -> typer.Typer:
 def test_should_render_logo_and_form_borders_when_group_help_runs() -> None:
     result = CliRunner().invoke(_bureau_app(), ["--help"])
     assert result.exit_code == 0, result.output
-    assert "NIRVYTEKH" in result.output
+    assert "Protocol" in result.output
     assert "╔" in result.output and "╝" in result.output
     assert "help · bureau" in result.output
 

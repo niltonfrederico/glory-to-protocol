@@ -1,6 +1,9 @@
 # planning/ é sandbox — snapshot entra as-is mas não vai pro repo.
 planning/
 
+# Per-session list of files Claude touched; consumed by Stop hook.
+.claude/.touched-files
+
 # Standard
 .env
 .env.*
