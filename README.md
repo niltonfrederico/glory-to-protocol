@@ -37,6 +37,7 @@ rarely overlap.
 - [ПОЛЕ № 4 · Status & Roadmap](#поле--4--status--roadmap)
 - [ОТКАЗ · Disclaimer](#отказ--disclaimer)
 - [ВКЛАД · Contributing](CONTRIBUTING.md)
+  - [Для граждан повышенного допуска · For citizens of elevated clearance](TRUE_CONTRIBUTING.md)
 - [КОДЕКС · Code of Conduct](CODE_OF_CONDUCT.md)
   - [Для граждан повышенного допуска · For citizens of elevated clearance](TRUE_CODE_OF_CONDUCT.md)
 - [ЛИЦЕНЗИЯ · License](LICENSE)

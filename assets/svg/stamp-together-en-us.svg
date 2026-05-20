@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img"
+  aria-label="ВМЕСТЕ МЫ СТРОИМ — Together We Build">
+  <title>ВМЕСТЕ МЫ СТРОИМ — Together We Build · Directorate of Public Works</title>
+  <defs>
+    <style>
+      .ring    { fill: none; stroke: #6fa86f; stroke-width: 4; }
+      .ring-in { fill: none; stroke: #6fa86f; stroke-width: 2; }
+      .arc-tx  { font: 700 20px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #6fa86f; letter-spacing: 4px; }
+      .arc-sm  { font: 600 16px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #6fa86f; letter-spacing: 3px; }
+      .gear    { font: 700 60px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #6fa86f; }
+      .center  { font: 700 14px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #6fa86f; letter-spacing: 2px; }
+      .cls     { font: 600 11px ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; fill: #6fa86f; letter-spacing: 3px; }
+    </style>
+    <path id="arc-top" d="M 40,160 A 120,120 0 0 1 280,160" />
+    <path id="arc-bot" d="M 50,160 A 110,110 0 0 0 270,160" />
+
+    <filter id="ink-strong" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="5" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" result="disp" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.35" numOctaves="3" seed="9" result="grain" />
+      <feColorMatrix in="grain" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.4" result="grainAlpha" />
+      <feComposite in="disp" in2="grainAlpha" operator="in" />
+    </filter>
+
+    <filter id="ink-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="5" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" result="disp" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="11" result="grain" />
+      <feColorMatrix in="grain" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.15" result="grainAlpha" />
+      <feComposite in="disp" in2="grainAlpha" operator="in" />
+    </filter>
+  </defs>
+
+  <g transform="rotate(-8 160 160)">
+    <g filter="url(#ink-strong)">
+      <circle class="ring"    cx="160" cy="160" r="140" />
+      <circle class="ring"    cx="160" cy="160" r="120" />
+      <circle class="ring-in" cx="160" cy="160" r="112" />
+      <text class="gear" text-anchor="middle" x="160" y="155">⚙</text>
+    </g>
+    <g filter="url(#ink-soft)">
+      <text class="arc-tx">
+        <textPath href="#arc-top" startOffset="50%" text-anchor="middle">ВМЕСТЕ МЫ СТРОИМ</textPath>
+      </text>
+      <text class="arc-sm">
+        <textPath href="#arc-bot" startOffset="50%" text-anchor="middle">TOGETHER WE BUILD</textPath>
+      </text>
+      <text class="center" text-anchor="middle" x="160" y="185">PUBLIC WORKS</text>
+      <text class="cls"    text-anchor="middle" x="160" y="205">CALL FOR LABOR</text>
+    </g>
+  </g>
+</svg>
