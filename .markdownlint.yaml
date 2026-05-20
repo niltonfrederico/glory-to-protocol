@@ -1,0 +1,26 @@
+default: true
+
+# Long URLs, tables, and prose lines pass through untouched.
+MD013: false
+
+# Inline HTML is intentional — centered headers/showcase GIFs use <p><img>.
+MD033:
+  allowed_elements:
+    - p
+    - img
+    - br
+    - details
+    - summary
+
+# ASCII-art "form" blocks (TRUE_* docs) are unlabeled fenced blocks by design.
+MD040: false
+
+# README and TRUE_* docs open with a centered HTML banner before the H1.
+MD041: false
+
+# Duplicate "Preamble" / "Attribution" headings are fine under different parents.
+MD024:
+  siblings_only: true
+
+# Table pipe alignment is cosmetic — content is what matters.
+MD060: false

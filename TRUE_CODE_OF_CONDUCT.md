@@ -127,6 +127,7 @@ recognized legal status under Bureau procedure. The devil employs counsel
 on retainer.
 
 ## Section VI — Enforcement Ladder
+
 [ladder]: #section-vi--enforcement-ladder
 
 ```
