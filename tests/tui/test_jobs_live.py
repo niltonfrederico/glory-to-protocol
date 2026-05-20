@@ -18,7 +18,7 @@ def test_should_truncate_left_when_bordered_split_overflows() -> None:
     assert "[★  OK  ★ ]" in line.plain
 
 
-def test_should_drive_live_region_when_console_is_terminal() -> None:
+async def test_should_drive_live_region_when_console_is_terminal() -> None:
     console = Console(
         record=True,
         width=theme.FORM_WIDTH,
@@ -27,15 +27,11 @@ def test_should_drive_live_region_when_console_is_terminal() -> None:
         highlight=False,
         legacy_windows=False,
     )
-
-    async def scenario() -> list[tuple[str, str]]:
-        with Form(title="t", console=console, show_header=False) as form:
-            outcomes = await form.run_pending(
-                [Job("live-tick", lambda: asyncio.sleep(0.4))],
-            )
-        return [(o.label, o.status) for o in outcomes]
-
-    result = asyncio.run(scenario())
+    with Form(title="t", console=console, show_header=False) as form:
+        outcomes = await form.run_pending(
+            [Job("live-tick", lambda: asyncio.sleep(0.4))],
+        )
+    result = [(o.label, o.status) for o in outcomes]
     assert result == [("live-tick", "ok")]
 
 

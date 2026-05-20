@@ -16,42 +16,26 @@ from glory_to_protocol.tui import theme
 from glory_to_protocol.tui.logo import LOGO_LARGE
 from glory_to_protocol.tui.logo import LOGO_SMALL
 from glory_to_protocol.tui.width import cell_len
+from tests.tui._helpers import assert_borders_aligned
 from tests.tui.conftest import save_snapshot
 
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 
-def _strip_ansi(s: str) -> str:
-    return ANSI_RE.sub("", s)
-
-
-def _render(console: Console) -> str:
-    return console.export_text()
-
-
-def _assert_borders_aligned(text: str, width: int = theme.FORM_WIDTH) -> None:
-    """Every framed line must have the same cell width and end with the right border."""
-    framed_lines = [line for line in text.splitlines() if line.startswith(("╔", "║", "╠", "╚"))]
-    assert framed_lines, "no framed lines found"
-    for line in framed_lines:
-        assert cell_len(line) == width, f"line width {cell_len(line)} != {width}: {line!r}"
-        assert line[-1] in {"╗", "║", "╣", "╝"}, f"unexpected right border: {line!r}"
-
-
 def test_should_render_aligned_frame_when_form_has_no_lines(snapshot_console: Console) -> None:
     with Form(title="empty", console=snapshot_console, show_header=False) as form:
         del form
-    out = _render(snapshot_console)
+    out = snapshot_console.export_text()
     save_snapshot("empty_form", out)
-    _assert_borders_aligned(out)
+    assert_borders_aligned(out)
 
 
 def test_should_render_header_when_form_has_title(snapshot_console: Console) -> None:
     with Form(title="version", console=snapshot_console) as form:
         form.line("Linha simples ASCII")
-    out = _render(snapshot_console)
+    out = snapshot_console.export_text()
     save_snapshot("form_with_header", out)
-    _assert_borders_aligned(out)
+    assert_borders_aligned(out)
 
 
 def test_should_align_borders_when_form_renders_cyrillic_lines(
@@ -61,9 +45,9 @@ def test_should_align_borders_when_form_renders_cyrillic_lines(
         form.line("Норман Директор Бюро")
         form.line("Mixed: Норман / Norman · Бюро / Bureau")
         form.line("ASCII only after cyrillic")
-    out = _render(snapshot_console)
+    out = snapshot_console.export_text()
     save_snapshot("form_cyrillic", out)
-    _assert_borders_aligned(out)
+    assert_borders_aligned(out)
 
 
 @pytest.mark.parametrize(
@@ -83,21 +67,16 @@ def test_should_render_aligned_frame_when_form_includes_each_stamp_variant(
     with Form(title=name, console=snapshot_console, show_header=False) as form:
         form.line("Pre-stamp line")
         form.stamp(factory())
-    out = _render(snapshot_console)
+    out = snapshot_console.export_text()
     save_snapshot(f"form_{name}", out)
-    _assert_borders_aligned(out)
+    assert_borders_aligned(out)
 
 
-def test_should_keep_cells_aligned_when_rendering_large_logo() -> None:
-    lines = LOGO_LARGE.splitlines()
+@pytest.mark.parametrize("logo", [LOGO_LARGE, LOGO_SMALL])
+def test_should_keep_cells_aligned_when_rendering_logo(logo: str) -> None:
+    lines = logo.splitlines()
     widths = {cell_len(line) for line in lines}
     assert len(widths) == 1, f"logo lines have varying width: {widths}"
-
-
-def test_should_keep_cells_aligned_when_rendering_small_logo() -> None:
-    lines = LOGO_SMALL.splitlines()
-    widths = {cell_len(line) for line in lines}
-    assert len(widths) == 1, f"small logo lines have varying width: {widths}"
 
 
 def test_should_strip_ansi_when_writing_snapshot_file(snapshot_console: Console) -> None:
@@ -105,6 +84,6 @@ def test_should_strip_ansi_when_writing_snapshot_file(snapshot_console: Console)
     with Form(title="ansi-check", console=snapshot_console) as form:
         form.line("colored line", style=theme.STAMP_APPROVE)
         form.stamp(stamp_approve("ok"))
-    out = _render(snapshot_console)
+    out = snapshot_console.export_text()
     save_snapshot("ansi_check", out)
-    assert _strip_ansi(out) == out, "ANSI sequences leaked into export_text output"
+    assert ANSI_RE.sub("", out) == out, "ANSI sequences leaked into export_text output"
