@@ -28,9 +28,7 @@
     - [Wrap](#wrap)
     - [Stamps](#stamps)
   - [Background jobs](#background-jobs)
-- [ПОЛЕ № 4 · Layout](#поле--4--layout)
-- [ПОЛЕ № 5 · Status](#поле--5--status)
-- [ПОЛЕ № 6 · Roadmap](#поле--6--roadmap)
+- [ПОЛЕ № 4 · Status & Roadmap](#поле--4--status--roadmap)
 - [ОТКАЗ · Disclaimer](#отказ--disclaimer)
 - [ВКЛАД · Contributing](CONTRIBUTING.md)
 - [ЛИЦЕНЗИЯ · License](LICENSE)
@@ -301,17 +299,17 @@ Outcomes returned by `run_pending`:
 The runner never raises on individual job failure; the caller decides how a
 failed background job affects the foreground stamp.
 
-## ПОЛЕ № 4 · Layout
+## ПОЛЕ № 4 · Status & Roadmap
 
-_TBD_
+**Pre-alpha (0.1.0).** The public surface — `Form`, the four stamps, `logo_large` / `logo_small`, `theme`, `configure()`, `Job` / `run_pending`, and `ProtocolTyper` / `make_app` — is stable enough to drive a real CLI (78 tests, ~98% coverage), but minor versions may still rename or restructure things before 1.0.
 
-## ПОЛЕ № 5 · Status
+Planned:
 
-_TBD_
-
-## ПОЛЕ № 6 · Roadmap
-
-_TBD_
+- Job callbacks (per-job hooks on completion / failure)
+- Long-running jobs (progress reporting, cancellation surface)
+- Custom component authoring (public composition API)
+- Sentient Rubber Duck (Да, really)
+- Interactive TUI
 
 ## ОТКАЗ · Disclaimer
 
