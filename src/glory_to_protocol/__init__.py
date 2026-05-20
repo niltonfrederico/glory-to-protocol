@@ -2,6 +2,10 @@ from importlib import import_module
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from glory_to_protocol.settings import ProtocolSettings
+    from glory_to_protocol.settings import configure
+    from glory_to_protocol.settings import get_settings
+    from glory_to_protocol.settings import reset_settings
     from glory_to_protocol.tui import Form
     from glory_to_protocol.tui import render_header
     from glory_to_protocol.tui import stamp_approve
@@ -20,13 +24,17 @@ __all__ = [
     "LOGO_LARGE",
     "LOGO_SMALL",
     "Form",
+    "ProtocolSettings",
     "ProtocolTyper",
     "ProtocolTyperCommand",
     "ProtocolTyperGroup",
+    "configure",
+    "get_settings",
     "logo_large",
     "logo_small",
     "make_app",
     "render_header",
+    "reset_settings",
     "stamp_approve",
     "stamp_order",
     "stamp_reject",
@@ -38,13 +46,17 @@ _LAZY_MAP: dict[str, tuple[str, str]] = {
     "Form": ("glory_to_protocol.tui", "Form"),
     "LOGO_LARGE": ("glory_to_protocol.tui.logo", "LOGO_LARGE"),
     "LOGO_SMALL": ("glory_to_protocol.tui.logo", "LOGO_SMALL"),
+    "ProtocolSettings": ("glory_to_protocol.settings", "ProtocolSettings"),
     "ProtocolTyper": ("glory_to_protocol.typer", "ProtocolTyper"),
     "ProtocolTyperCommand": ("glory_to_protocol.typer", "ProtocolTyperCommand"),
     "ProtocolTyperGroup": ("glory_to_protocol.typer", "ProtocolTyperGroup"),
+    "configure": ("glory_to_protocol.settings", "configure"),
+    "get_settings": ("glory_to_protocol.settings", "get_settings"),
     "logo_large": ("glory_to_protocol.tui.logo", "logo_large"),
     "logo_small": ("glory_to_protocol.tui.logo", "logo_small"),
     "make_app": ("glory_to_protocol.typer", "make_app"),
     "render_header": ("glory_to_protocol.tui", "render_header"),
+    "reset_settings": ("glory_to_protocol.settings", "reset_settings"),
     "stamp_approve": ("glory_to_protocol.tui", "stamp_approve"),
     "stamp_order": ("glory_to_protocol.tui", "stamp_order"),
     "stamp_reject": ("glory_to_protocol.tui", "stamp_reject"),
