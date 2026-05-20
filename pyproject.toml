@@ -19,7 +19,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/glory_to_protocol"]
+packages = ["src/glory_to_protocol", "examples"]
 
 [dependency-groups]
 dev = [

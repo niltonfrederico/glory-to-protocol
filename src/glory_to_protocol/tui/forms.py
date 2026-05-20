@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import UTC
+from datetime import datetime
 from types import TracebackType
 from typing import Self
 
@@ -172,8 +174,13 @@ class Form:
 
     def _print_signature(self) -> None:
         self.divider()
-        signature = Text()
-        signature.append("Подписано: ", style=theme.MUTED)
-        signature.append("Норман", style=theme.BODY)
-        signature.append(", Директор НИРВЫТЕХ", style=theme.SIGNATURE)
-        _print_bordered_text(self.console, signature.plain, theme.SIGNATURE)
+        timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
+        text = f"Подписано: Норман, Директор НИРВЫТЕХ  ·  {timestamp}"
+        inner = _inner_width()
+        truncated = truncate_to(text, inner)
+        padded = " " * (inner - cell_len(truncated)) + truncated
+        line = Text()
+        line.append("║ ", style=theme.BORDER)
+        line.append(padded, style=theme.SIGNATURE)
+        line.append(" ║", style=theme.BORDER)
+        self.console.print(line)

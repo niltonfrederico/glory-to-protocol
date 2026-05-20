@@ -14,7 +14,7 @@ from glory_to_protocol.tui.logo import LOGO_LARGE
 
 
 def _session_id() -> str:
-    explicit = os.getenv("NORMAN_SESSION_ID")
+    explicit = os.getenv("PROTOCOL_SESSION_ID")
     if explicit:
         return explicit
     return uuid.uuid4().hex[:8]
