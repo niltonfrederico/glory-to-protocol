@@ -5,6 +5,12 @@
 
 ## СВОДКА · TL;DR
 
+A Python TUI library that wraps your CLI in a deadpan, state-bureau
+aesthetic — framed forms, four decision stamps (`approve` / `reject` /
+`order` / `review`), themed `--help`, an ASCII logo header, and a live
+ticker for background jobs. Built because useful tools and funny tools
+rarely overlap.
+
 <p align="center">
   <img src="assets/showcase.gif" alt="protocol-showcase — all TUI components rendered" width="900">
 </p>
@@ -35,7 +41,26 @@
 
 ## ПОЛЕ № 1 · Purpose
 
-_TBD_
+A Python TUI library for CLI tools — forms with framed borders, four kinds of
+decision stamps (`approve` / `reject` / `order` / `review`), a themed `--help`
+renderer, an ASCII logo header, and a live ticker for background jobs.
+
+I built this because I kept reaching for libraries that were either *useful*
+or *fun*, and rarely both. I wanted my own CLIs to feel like an artifact —
+printing `REJECTED` with a timestamp instead of `Error: invalid input`. The
+fact that it doubles as a perfectly serviceable TUI toolkit is a side effect.
+
+The aesthetic — Cyrillic accents, bureau titles, deadpan stamps — landed
+where it did because I'd been deep into Papers, Please at the time. The lib
+doesn't reuse a line of code or any asset from that game (see the
+[disclaimer](#отказ--disclaimer)), but the vibe is unmistakably from the
+same shelf.
+
+A note on the Russian: I speak some, and a few terms here are bent on
+purpose for the bureau-comic effect, but I'm nowhere near a native speaker.
+If anything reads as accidentally wrong — or, worse, accidentally offensive
+— please [open an issue](https://github.com/niltonfrederico/glory-to-protocol/issues/new)
+and I'll fix it.
 
 ## ПОЛЕ № 2 · Installation
 
@@ -307,9 +332,12 @@ Planned:
 
 - Job callbacks (per-job hooks on completion / failure)
 - Long-running jobs (progress reporting, cancellation surface)
+- Better tracebacks (themed, framed inside the bureau form)
 - Custom component authoring (public composition API)
 - Sentient Rubber Duck (Да, really)
 - Interactive TUI
+
+Want a favor from the Верховный Лидер (Supreme Leader)? [Open an issue](https://github.com/niltonfrederico/glory-to-protocol/issues/new).
 
 ## ОТКАЗ · Disclaimer
 
