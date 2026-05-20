@@ -1,4 +1,10 @@
 <p align="center">
+  <a href="TRUE_CONTRIBUTING.pt-br.md">
+    <img src="https://img.shields.io/badge/leia%20em-portugu%C3%AAs-6fa86f?style=for-the-badge" alt="Leia em Português">
+  </a>
+</p>
+
+<p align="center">
   <img src="assets/svg/header-contributing-en-us.svg" alt="glory-to-protocol — Directorate of Public Works · TOGETHER WE BUILD" width="880">
 </p>
 

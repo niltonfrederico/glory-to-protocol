@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="CONTRIBUTING.pt-br.md">
+    <img src="https://img.shields.io/badge/leia%20em-portugu%C3%AAs-6fa86f?style=for-the-badge" alt="Leia em Português">
+  </a>
+</p>
+
 # Contributing
 
 Thanks for considering a contribution. This page is short on purpose. If you

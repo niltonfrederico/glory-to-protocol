@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="CODE_OF_CONDUCT.pt-br.md">
+    <img src="https://img.shields.io/badge/leia%20em-portugu%C3%AAs-6fa86f?style=for-the-badge" alt="Leia em Português">
+  </a>
+</p>
+
 # Code of Conduct
 
 > "After all, we're all alike."

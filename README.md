@@ -1,15 +1,21 @@
 <!-- markdownlint-disable MD041 -->
 <p align="center">
+  <a href="README.pt-br.md">
+    <img src="https://img.shields.io/badge/leia%20em-portugu%C3%AAs-6fa86f?style=for-the-badge" alt="Leia em Português">
+  </a>
+</p>
+
+<p align="center">
   <img src="assets/svg/header-en-us.svg" alt="glory-to-protocol — Bureau of Computational Technology" width="880">
 </p>
 
 ## СВОДКА · TL;DR
 
-A Python TUI library that wraps your CLI in a deadpan, state-bureau
-aesthetic — framed forms, four decision stamps (`approve` / `reject` /
-`order` / `review`), themed `--help`, an ASCII logo header, and a live
-ticker for background jobs. Built because useful tools and funny tools
-rarely overlap.
+A Python TUI library for [Typer](https://typer.tiangolo.com/) CLIs that
+wraps your commands in a deadpan, state-bureau aesthetic — framed forms,
+four decision stamps (`approve` / `reject` / `order` / `review`), themed
+`--help`, an ASCII logo header, and a live ticker for background jobs.
+Built because useful tools and funny tools rarely overlap.
 
 <p align="center">
   <img src="assets/gifs/showcase.gif" alt="protocol-showcase — all TUI components rendered" width="900">
@@ -44,9 +50,13 @@ rarely overlap.
 
 ## ПОЛЕ № 1 · Purpose
 
-A Python TUI library for CLI tools — forms with framed borders, four kinds of
-decision stamps (`approve` / `reject` / `order` / `review`), a themed `--help`
-renderer, an ASCII logo header, and a live ticker for background jobs.
+A Python TUI library for [Typer](https://typer.tiangolo.com/) CLIs —
+forms with framed borders, four kinds of decision stamps (`approve` /
+`reject` / `order` / `review`), a themed `--help` renderer, an ASCII logo
+header, and a live ticker for background jobs. The library ships a
+`ProtocolTyper` subclass and `make_app()` helper so the bureau frame
+shows up on every command and sub-app without extra wiring; see
+[Typer CLI integration](#typer-cli-integration) below.
 
 I built this because I kept reaching for libraries that were either *useful*
 or *fun*, and rarely both. I wanted my own CLIs to feel like an artifact —

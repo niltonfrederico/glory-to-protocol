@@ -6,6 +6,7 @@ MD013: false
 # Inline HTML is intentional — centered headers/showcase GIFs use <p><img>.
 MD033:
   allowed_elements:
+    - a
     - p
     - img
     - br
