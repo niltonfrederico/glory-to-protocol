@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Code of Conduct concern
+    url: https://github.com/niltonfrederico/glory-to-protocol/blob/main/CODE_OF_CONDUCT.md
+    about: Read the Code of Conduct. Report violations privately to the maintainer.

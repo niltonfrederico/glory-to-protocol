@@ -28,10 +28,9 @@ One PR addresses one issue. Don't bundle a refactor into a feature PR.
 
 A PR is ready for review when:
 
-- Tests pass.
-- Coverage does not regress.
-- `ruff format` and `ruff check` are clean.
-- `ty` (type check) is clean.
+- `uv run pre-commit run --all-files` is clean (covers lint, format, type
+  check, dead fixtures, markdown).
+- Tests pass and coverage does not regress.
 - New tests follow `test_should_{expected}_when_{condition}`.
 
 If a check fails for reasons unrelated to your patch, call it out in the PR

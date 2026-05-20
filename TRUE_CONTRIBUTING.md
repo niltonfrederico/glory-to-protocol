@@ -71,11 +71,11 @@ A patch is fit for review when every line of the following holds:
 ┌──────────────────────────────────────────────────────────────────────────┐
 │ CHECK ..............: REQUIRED STATE                                     │
 │ ──────────────────────────────────────────────────────────────────────── │
+│ pre-commit .........: `uv run pre-commit run --all-files` clean.         │
+│                       (covers lint, format, type check, dead fixtures,   │
+│                       and markdown.)                                     │
 │ Test suite .........: Passes in full.                                    │
 │ Coverage ...........: Does not regress.                                  │
-│ `ruff format` ......: Clean.                                             │
-│ `ruff check` .......: Clean.                                             │
-│ `ty` (type check) ..: Clean.                                             │
 │ Test names .........: `test_should_{expected}_when_{condition}`.         │
 └──────────────────────────────────────────────────────────────────────────┘
 ```

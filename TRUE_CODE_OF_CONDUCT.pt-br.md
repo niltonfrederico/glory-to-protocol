@@ -131,8 +131,7 @@ operacional sob a qual qualquer das condutas acima melhore um projeto de
 software. A questão não está aberta a debate dentro destas dependências.
 
 A Diretoria registra, para constar, que "advogado do diabo" não é figura
-jurídica reconhecida em procedimento do Bureau. O diabo emprega advocacia
-sob contrato fixo.
+jurídica reconhecida em procedimento do Bureau. O diabo apenas advoga sob consultoria privada.
 
 ## Seção VI — Escada de Aplicação
 

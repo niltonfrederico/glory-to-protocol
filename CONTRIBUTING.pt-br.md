@@ -30,10 +30,9 @@ Um PR endereça uma issue. Não embuta um refactor num PR de feature.
 
 Um PR está pronto pra review quando:
 
-- Os testes passam.
-- A cobertura não regride.
-- `ruff format` e `ruff check` estão limpos.
-- `ty` (type check) está limpo.
+- `uv run pre-commit run --all-files` está limpo (cobre lint, format, type
+  check, dead fixtures, markdown).
+- Os testes passam e a cobertura não regride.
 - Testes novos seguem `test_should_{expected}_when_{condition}`.
 
 Se um check falha por motivo não relacionado ao seu patch, declare isso na

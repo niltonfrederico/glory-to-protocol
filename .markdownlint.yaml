@@ -12,6 +12,8 @@ MD033:
     - br
     - details
     - summary
+    - h1
+    - i
 
 # ASCII-art "form" blocks (TRUE_* docs) are unlabeled fenced blocks by design.
 MD040: false

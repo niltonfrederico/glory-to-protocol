@@ -72,11 +72,11 @@ Um patch está apto a review quando cada linha do seguinte se sustenta:
 ┌──────────────────────────────────────────────────────────────────────────┐
 │ VERIFICAÇÃO ........: ESTADO EXIGIDO                                     │
 │ ──────────────────────────────────────────────────────────────────────── │
+│ pre-commit .........: `uv run pre-commit run --all-files` limpo.         │
+│                       (Cobre lint, format, type check, dead fixtures e   │
+│                       markdown.)                                         │
 │ Suíte de testes ....: Passa integralmente.                               │
 │ Cobertura ..........: Não regride.                                       │
-│ `ruff format` ......: Limpo.                                             │
-│ `ruff check` .......: Limpo.                                             │
-│ `ty` (type check) ..: Limpo.                                             │
 │ Nomes de teste .....: `test_should_{expected}_when_{condition}`.         │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
