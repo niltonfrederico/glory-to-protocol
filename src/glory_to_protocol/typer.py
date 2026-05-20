@@ -13,6 +13,10 @@ class ProtocolTyper(typer.Typer):
         kwargs.setdefault("cls", ProtocolTyperCommand)
         return super().command(*args, **kwargs)
 
+    def add_typer(self, typer_instance: typer.Typer, *args: Any, **kwargs: Any) -> Any:
+        kwargs.setdefault("cls", ProtocolTyperGroup)
+        return super().add_typer(typer_instance, *args, **kwargs)
+
 
 def make_app(**kwargs: Any) -> ProtocolTyper:
     """Build a ProtocolTyper app that prints --help instead of erroring on no args.

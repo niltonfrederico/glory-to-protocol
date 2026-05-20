@@ -7,13 +7,13 @@ from rich.console import Console
 from glory_to_protocol.jobs.runner import JobHandle
 from glory_to_protocol.jobs.types import Job
 from glory_to_protocol.tui import theme
+from glory_to_protocol.tui._borders import bordered_split
 from glory_to_protocol.tui.forms import Form
-from glory_to_protocol.tui.jobs import _bordered_split
 
 
 def test_should_truncate_left_when_bordered_split_overflows() -> None:
     long_left = "x" * (theme.FORM_WIDTH * 2)
-    line = _bordered_split(long_left, "[★  OK  ★ ]", theme.STAMP_APPROVE)
+    line = bordered_split(long_left, "[★  OK  ★ ]", theme.STAMP_APPROVE)
     assert "║" in line.plain
     assert "[★  OK  ★ ]" in line.plain
 

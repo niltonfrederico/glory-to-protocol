@@ -10,7 +10,7 @@ JobStatus = Literal["pending", "ok", "fail"]
 JobCoroFactory = Callable[[], Awaitable[None]]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Job:
     """A unit of background work to run alongside a foreground task.
 
@@ -24,7 +24,7 @@ class Job:
     critical: bool = False
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class JobOutcome:
     label: str
     status: JobStatus

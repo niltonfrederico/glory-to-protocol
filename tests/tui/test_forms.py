@@ -4,8 +4,8 @@ import io
 from rich.console import Console
 
 from glory_to_protocol.tui import theme
+from glory_to_protocol.tui._borders import print_top
 from glory_to_protocol.tui.forms import Form
-from glory_to_protocol.tui.forms import _print_top
 from glory_to_protocol.tui.forms import _wrap_cells
 
 
@@ -17,7 +17,7 @@ def _capture_console() -> tuple[Console, io.StringIO]:
 def test_should_truncate_title_when_print_top_title_longer_than_width() -> None:
     console, buf = _capture_console()
     long_title = "x" * (theme.FORM_WIDTH * 2)
-    _print_top(console, long_title)
+    print_top(console, long_title)
     output = buf.getvalue()
     assert "╔" in output and "╗" in output
 

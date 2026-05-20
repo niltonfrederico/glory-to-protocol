@@ -4,6 +4,7 @@ import re
 from collections.abc import Callable
 
 import pytest
+from rich.cells import cell_len
 from rich.console import Console
 from rich.console import RenderableType
 
@@ -15,7 +16,6 @@ from glory_to_protocol.tui import stamp_review
 from glory_to_protocol.tui import theme
 from glory_to_protocol.tui.logo import LOGO_LARGE
 from glory_to_protocol.tui.logo import LOGO_SMALL
-from glory_to_protocol.tui.width import cell_len
 from tests.tui._helpers import assert_borders_aligned
 from tests.tui.conftest import save_snapshot
 

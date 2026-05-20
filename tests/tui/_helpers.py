@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from rich.cells import cell_len
+
 from glory_to_protocol.tui import theme
-from glory_to_protocol.tui.width import cell_len
 
 
 def assert_borders_aligned(text: str, width: int = theme.FORM_WIDTH) -> None:

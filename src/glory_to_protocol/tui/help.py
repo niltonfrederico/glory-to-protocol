@@ -3,6 +3,7 @@ from __future__ import annotations
 import textwrap
 
 import click
+from rich.cells import cell_len
 from rich.console import Console
 from rich.text import Text
 from typer.core import TyperCommand
@@ -10,13 +11,11 @@ from typer.core import TyperGroup
 
 from glory_to_protocol.tui import theme
 from glory_to_protocol.tui.forms import Form
-from glory_to_protocol.tui.logo import LOGO_SMALL
-from glory_to_protocol.tui.width import cell_len
+from glory_to_protocol.tui.logo import logo_small
 
-_BODY_WIDTH = 72  # leaves margin inside the FORM_WIDTH=80 frame
-_NBSP = " "  # Form._wrap_cells splits on " "; NBSP survives as visible indent.
-_INDENT_2 = _NBSP * 2
-_INDENT_4 = _NBSP * 4
+_BODY_WIDTH = theme.FORM_WIDTH - 8
+_INDENT_2 = "  "
+_INDENT_4 = "    "
 
 
 def _flag_label(opt: click.Option) -> str:
@@ -42,9 +41,9 @@ def _argument_label(arg: click.Argument) -> str:
 
 
 def _default_hint(opt: click.Option) -> str:
-    if not opt.show_default and opt.default in (None, False, (), [], ""):
-        return ""
     if opt.default in (None, False):
+        return ""
+    if not opt.show_default and opt.default in ((), [], ""):
         return ""
     return f"[default: {opt.default}]"
 
@@ -93,19 +92,23 @@ def render_norman_help(ctx: click.Context) -> None:
         if help_text:
             for raw_line in help_text.splitlines():
                 for line in _wrap_indented(raw_line.strip(), indent=""):
-                    form.line(line)
+                    form.line(line, wrap=False)
             form.divider()
 
         form.line("Uso:", style=theme.HEADER)
         for line in _wrap_indented(_usage_line(ctx, command, is_group=is_group)):
-            form.line(line)
+            form.line(line, wrap=False)
 
         arguments = [p for p in command.params if isinstance(p, click.Argument)]
         if arguments:
             form.divider()
             form.line("Argumentos:", style=theme.HEADER)
             for arg in arguments:
-                form.line(f"{_INDENT_2}{_argument_label(arg)}", style=theme.CYRILLIC_ACCENT)
+                form.line(
+                    f"{_INDENT_2}{_argument_label(arg)}",
+                    style=theme.CYRILLIC_ACCENT,
+                    wrap=False,
+                )
 
         options = [p for p in command.params if isinstance(p, click.Option) and not p.hidden]
         if options:
@@ -114,14 +117,18 @@ def render_norman_help(ctx: click.Context) -> None:
             for index, opt in enumerate(options):
                 if index > 0:
                     form.line("")
-                form.line(f"{_INDENT_2}{_flag_label(opt)}", style=theme.CYRILLIC_ACCENT)
+                form.line(
+                    f"{_INDENT_2}{_flag_label(opt)}",
+                    style=theme.CYRILLIC_ACCENT,
+                    wrap=False,
+                )
                 desc = (opt.help or "").strip()
                 if desc:
                     for line in _wrap_indented(desc):
-                        form.line(line)
+                        form.line(line, wrap=False)
                 hint = _default_hint(opt)
                 if hint:
-                    form.line(f"{_INDENT_4}{hint}", style=theme.MUTED)
+                    form.line(f"{_INDENT_4}{hint}", style=theme.MUTED, wrap=False)
 
         if is_group:
             subcommands = sorted(command.list_commands(ctx))
@@ -134,22 +141,23 @@ def render_norman_help(ctx: click.Context) -> None:
                         continue
                     if index > 0:
                         form.line("")
-                    form.line(f"{_INDENT_2}{name}", style=theme.CYRILLIC_ACCENT)
+                    form.line(f"{_INDENT_2}{name}", style=theme.CYRILLIC_ACCENT, wrap=False)
                     short = _first_line(sub.short_help or sub.help)
                     if short:
                         for line in _wrap_indented(short):
-                            form.line(line)
+                            form.line(line, wrap=False)
                     form.line(
                         f"{_INDENT_4}→ {ctx.command_path} {name} --help",
                         style=theme.MUTED,
+                        wrap=False,
                     )
 
     _print_right_aligned_stamp(console)
 
 
 def _print_right_aligned_stamp(console: Console) -> None:
-    """Print LOGO_SMALL right-aligned within FORM_WIDTH, after the form closes."""
-    for raw_line in LOGO_SMALL.splitlines():
+    """Print logo_small right-aligned within FORM_WIDTH, after the form closes."""
+    for raw_line in logo_small().splitlines():
         pad = max(theme.FORM_WIDTH - cell_len(raw_line), 0)
         text = Text(" " * pad)
         text.append(raw_line, style=theme.HEADER)

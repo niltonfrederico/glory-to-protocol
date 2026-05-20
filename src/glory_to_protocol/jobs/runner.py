@@ -4,7 +4,6 @@ import asyncio
 import logging
 import time
 from dataclasses import dataclass
-from dataclasses import field
 from types import TracebackType
 from typing import Self
 
@@ -15,7 +14,7 @@ from glory_to_protocol.jobs.types import JobStatus
 _logger = logging.getLogger("glory_to_protocol.jobs")
 
 
-@dataclass
+@dataclass(slots=True)
 class JobHandle:
     """Mutable handle exposed to observers (TUI region).
 
@@ -26,7 +25,6 @@ class JobHandle:
     label: str
     status: JobStatus = "pending"
     outcome: JobOutcome | None = None
-    _started_at: float = field(default_factory=time.monotonic)
 
     def done(self) -> bool:
         return self.status != "pending"
@@ -38,13 +36,17 @@ class JobRunner:
     Failures are isolated: an exception in one job marks that job `fail` but
     never cancels siblings or propagates out of `__aexit__`. Outcomes are
     collected in registration order via the `outcomes` property.
+
+    Cancellation propagates: a job task receiving `CancelledError` is not
+    converted into a `"fail"` outcome; it stays `pending` and the
+    `CancelledError` flows up through `__aexit__`. If the context body raises,
+    pending tasks are cancelled before waiting on `gather`.
     """
 
     def __init__(self) -> None:
         self._handles: list[JobHandle] = []
         self._tasks: list[asyncio.Task[None]] = []
         self._entered = False
-        self._outcomes: list[JobOutcome] = []
 
     async def __aenter__(self) -> Self:
         self._entered = True
@@ -58,8 +60,10 @@ class JobRunner:
     ) -> None:
         if not self._tasks:
             return
+        if exc_type is not None:
+            for task in self._tasks:
+                task.cancel()
         await asyncio.gather(*self._tasks, return_exceptions=True)
-        self._outcomes = [handle.outcome for handle in self._handles if handle.outcome is not None]
 
     def spawn(self, job: Job) -> JobHandle:
         if not self._entered:
@@ -76,26 +80,26 @@ class JobRunner:
 
     @property
     def outcomes(self) -> list[JobOutcome]:
-        return list(self._outcomes)
+        return [h.outcome for h in self._handles if h.outcome is not None]
 
     async def _run(self, job: Job, handle: JobHandle) -> None:
         start = time.monotonic()
+        error: Exception | None = None
         try:
             await job.coro_factory()
-        except BaseException as err:
-            duration_ms = int((time.monotonic() - start) * 1000)
-            outcome = JobOutcome(label=job.label, status="fail", error=err, duration_ms=duration_ms)
-            handle.outcome = outcome
-            handle.status = "fail"
+        except Exception as err:
+            error = err
+        duration_ms = int((time.monotonic() - start) * 1000)
+        status: JobStatus = "fail" if error is not None else "ok"
+        outcome = JobOutcome(label=job.label, status=status, error=error, duration_ms=duration_ms)
+        handle.outcome = outcome
+        handle.status = status
+        if error is not None:
             _logger.warning(
                 "job failed: label=%r duration_ms=%d error=%r",
                 job.label,
                 duration_ms,
-                err,
+                error,
             )
-            return
-        duration_ms = int((time.monotonic() - start) * 1000)
-        outcome = JobOutcome(label=job.label, status="ok", error=None, duration_ms=duration_ms)
-        handle.outcome = outcome
-        handle.status = "ok"
-        _logger.info("job ok: label=%r duration_ms=%d", job.label, duration_ms)
+        else:
+            _logger.info("job ok: label=%r duration_ms=%d", job.label, duration_ms)

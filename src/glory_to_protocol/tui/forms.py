@@ -5,6 +5,7 @@ from datetime import datetime
 from types import TracebackType
 from typing import Self
 
+from rich.cells import cell_len
 from rich.console import Console
 from rich.console import RenderableType
 from rich.style import Style
@@ -13,54 +14,17 @@ from rich.text import Text
 from glory_to_protocol.jobs.runner import JobRunner
 from glory_to_protocol.jobs.types import Job
 from glory_to_protocol.jobs.types import JobOutcome
+from glory_to_protocol.settings import get_settings
 from glory_to_protocol.tui import theme
+from glory_to_protocol.tui._borders import bordered_line
+from glory_to_protocol.tui._borders import inner_width
+from glory_to_protocol.tui._borders import print_bordered_renderable
+from glory_to_protocol.tui._borders import print_bottom
+from glory_to_protocol.tui._borders import print_divider
+from glory_to_protocol.tui._borders import print_top
+from glory_to_protocol.tui._borders import truncate_to
 from glory_to_protocol.tui.header import render_header
 from glory_to_protocol.tui.jobs import PendingJobsRegion
-from glory_to_protocol.tui.width import cell_len
-from glory_to_protocol.tui.width import truncate_to
-
-# Total form width includes the side borders.
-# Inner width = FORM_WIDTH - len("║ ") - len(" ║") = FORM_WIDTH - 4
-_SIDE_PADDING = 4
-
-
-def _inner_width() -> int:
-    return theme.FORM_WIDTH - _SIDE_PADDING
-
-
-def _print_top(console: Console, title: str) -> None:
-    width = theme.FORM_WIDTH
-    title_chunk = f" {title} " if title else ""
-    fill = width - 2 - cell_len(title_chunk) - 2
-    fill = max(fill, 0)
-    line = "╔══" + title_chunk + ("═" * fill) + "╗"
-    if cell_len(line) > width:
-        title_chunk = truncate_to(title_chunk, width - 6)
-        fill = width - 2 - cell_len(title_chunk) - 2
-        line = "╔══" + title_chunk + ("═" * fill) + "╗"
-    console.print(Text(line, style=theme.BORDER))
-
-
-def _print_bottom(console: Console) -> None:
-    line = "╚" + ("═" * (theme.FORM_WIDTH - 2)) + "╝"
-    console.print(Text(line, style=theme.BORDER))
-
-
-def _print_divider(console: Console) -> None:
-    line = "╠" + ("═" * (theme.FORM_WIDTH - 2)) + "╣"
-    console.print(Text(line, style=theme.BORDER))
-
-
-def _print_bordered_text(console: Console, text: str, style: Style | None) -> None:
-    inner = _inner_width()
-    body_style = style or theme.BODY
-    for chunk in _wrap_cells(text, inner):
-        padded = chunk + " " * (inner - cell_len(chunk))
-        line = Text()
-        line.append("║ ", style=theme.BORDER)
-        line.append(padded, style=body_style)
-        line.append(" ║", style=theme.BORDER)
-        console.print(line)
 
 
 def _wrap_cells(text: str, width: int) -> list[str]:
@@ -92,18 +56,14 @@ def _wrap_cells(text: str, width: int) -> list[str]:
     return out
 
 
-def _print_bordered_renderable(console: Console, renderable: RenderableType) -> None:
-    inner = _inner_width()
-    options = console.options.update(width=inner)
-    lines = console.render_lines(renderable, options, pad=True)
-    for segments in lines:
-        text = Text()
-        text.append("║ ", style=theme.BORDER)
-        for seg in segments:
-            if seg.text:
-                text.append(seg.text, style=seg.style)
-        text.append(" ║", style=theme.BORDER)
-        console.print(text)
+def _print_bordered_text(console: Console, text: str, style: Style | None, *, wrap: bool) -> None:
+    body_style = style or theme.BODY
+    if not wrap:
+        console.print(bordered_line(text, body_style))
+        return
+    inner = inner_width()
+    for chunk in _wrap_cells(text, inner):
+        console.print(bordered_line(chunk, body_style))
 
 
 class Form:
@@ -122,17 +82,19 @@ class Form:
         *,
         console: Console | None = None,
         show_header: bool = True,
+        signature_text: str | None = None,
     ) -> None:
         self.title = title
         self.console = console or Console(highlight=False, soft_wrap=False)
         self._show_header = show_header
+        self._signature_text = signature_text
         self._closed = False
 
     def __enter__(self) -> Self:
-        _print_top(self.console, self.title)
+        print_top(self.console, self.title)
         if self._show_header:
-            _print_bordered_renderable(self.console, render_header())
-            _print_divider(self.console)
+            print_bordered_renderable(self.console, render_header())
+            print_divider(self.console)
         return self
 
     def __exit__(
@@ -144,18 +106,18 @@ class Form:
         if self._closed:
             return
         self._print_signature()
-        _print_bottom(self.console)
+        print_bottom(self.console)
         self._closed = True
 
-    def line(self, text: str = "", style: Style | None = None) -> None:
-        _print_bordered_text(self.console, text, style)
+    def line(self, text: str = "", style: Style | None = None, *, wrap: bool = True) -> None:
+        _print_bordered_text(self.console, text, style, wrap=wrap)
 
     def divider(self) -> None:
-        _print_divider(self.console)
+        print_divider(self.console)
 
     def stamp(self, renderable: RenderableType) -> None:
         self.divider()
-        _print_bordered_renderable(self.console, renderable)
+        print_bordered_renderable(self.console, renderable)
 
     async def run_pending(self, jobs: list[Job]) -> list[JobOutcome]:
         """Spawn `jobs` as background tasks and render them as a live region.
@@ -175,8 +137,9 @@ class Form:
     def _print_signature(self) -> None:
         self.divider()
         timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
-        text = f"Подписано: Норман, Директор НИРВЫТЕХ  ·  {timestamp}"
-        inner = _inner_width()
+        signature = self._signature_text or get_settings().director_signature
+        text = f"{signature}  ·  {timestamp}"
+        inner = inner_width()
         truncated = truncate_to(text, inner)
         padded = " " * (inner - cell_len(truncated)) + truncated
         line = Text()

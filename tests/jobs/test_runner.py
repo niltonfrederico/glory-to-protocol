@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import asyncio
 
+import pytest
+
 from glory_to_protocol.jobs.runner import JobRunner
 from glory_to_protocol.jobs.types import Job
 
@@ -74,3 +76,77 @@ def test_should_raise_when_spawn_called_outside_async_context() -> None:
     except RuntimeError:
         raised = True
     assert raised
+
+
+async def test_should_propagate_cancellation_when_task_cancelled_externally() -> None:
+    started = asyncio.Event()
+
+    async def long_running() -> None:
+        started.set()
+        await asyncio.sleep(60)
+
+    async def driver() -> None:
+        async with JobRunner() as runner:
+            runner.spawn(Job("long", long_running))
+            await started.wait()
+
+    task = asyncio.create_task(driver())
+    await started.wait()
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+
+
+async def test_should_cancel_pending_tasks_when_context_body_raises() -> None:
+    started = asyncio.Event()
+
+    async def long_running() -> None:
+        started.set()
+        await asyncio.sleep(60)
+
+    class Boom(RuntimeError):
+        pass
+
+    loop = asyncio.get_running_loop()
+    t0 = loop.time()
+    with pytest.raises(Boom):
+        async with JobRunner() as runner:
+            runner.spawn(Job("long-a", long_running))
+            runner.spawn(Job("long-b", long_running))
+            await started.wait()
+            raise Boom("body fails")
+    elapsed = loop.time() - t0
+    assert elapsed < 1.0, f"__aexit__ blocked on pending tasks (elapsed={elapsed:.2f}s)"
+
+
+async def test_should_not_mark_job_failed_when_task_cancelled() -> None:
+    started = asyncio.Event()
+
+    async def long_running() -> None:
+        started.set()
+        await asyncio.sleep(60)
+
+    class Boom(RuntimeError):
+        pass
+
+    handle = None
+    with pytest.raises(Boom):
+        async with JobRunner() as runner:
+            handle = runner.spawn(Job("cancellable", long_running))
+            await started.wait()
+            raise Boom("trigger cancellation in __aexit__")
+
+    assert handle is not None
+    assert handle.status != "fail", f"cancelled task was reported as fail: {handle.outcome}"
+
+
+async def test_should_mark_job_failed_when_regular_exception_raised() -> None:
+    async def boom() -> None:
+        raise ValueError("boom")
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("bad", boom))
+
+    [outcome] = runner.outcomes
+    assert outcome.status == "fail"
+    assert isinstance(outcome.error, ValueError)

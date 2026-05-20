@@ -14,22 +14,21 @@ from rich.text import Text
 from glory_to_protocol.jobs.runner import JobHandle
 from glory_to_protocol.jobs.types import JobStatus
 from glory_to_protocol.tui import theme
-from glory_to_protocol.tui.width import cell_len
-from glory_to_protocol.tui.width import truncate_to
+from glory_to_protocol.tui._borders import bordered_line
+from glory_to_protocol.tui._borders import bordered_split
 
 _TICK_SECONDS = 0.25
 _REFRESH_PER_SECOND = 4
 
 _DOT_FRAMES = ("", ".", "..", "...")
 
-_MINI_STAMP_INNER = 4  # centered text region; widest label is "FAIL"
+_MINI_STAMP_INNER = 4
 
 
 def _mini_stamp(label: str) -> str:
     return f"[★ {label.center(_MINI_STAMP_INNER)} ★ ]"
 
 
-_MINI_STAMP_WIDTH = len(_mini_stamp(""))  # 10 cells
 _MINI_STAMP: dict[JobStatus, tuple[str, Style]] = {
     "pending": (_mini_stamp("···"), theme.MUTED),
     "ok": (_mini_stamp("OK"), theme.STAMP_APPROVE),
@@ -37,44 +36,10 @@ _MINI_STAMP: dict[JobStatus, tuple[str, Style]] = {
 }
 
 
-def _inner_width() -> int:
-    return theme.FORM_WIDTH - 4
-
-
 def _label_with_dots(label: str, phase: int, done: bool) -> str:
     if done:
         return label
     return label + _DOT_FRAMES[phase % len(_DOT_FRAMES)]
-
-
-def _bordered_split(left: str, right: str, right_style: Style) -> Text:
-    inner = _inner_width()
-    left_w = cell_len(left)
-    right_w = cell_len(right)
-    if left_w + right_w > inner:
-        left = truncate_to(left, inner - right_w)
-        left_w = cell_len(left)
-    padding = inner - left_w - right_w
-
-    line = Text()
-    line.append("║ ", style=theme.BORDER)
-    line.append(left, style=theme.BODY)
-    line.append(" " * padding)
-    line.append(right, style=right_style)
-    line.append(" ║", style=theme.BORDER)
-    return line
-
-
-def _bordered_line(text: str, style: Style = theme.BODY) -> Text:
-    inner = _inner_width()
-    body = truncate_to(text, inner)
-    padding = inner - cell_len(body)
-    line = Text()
-    line.append("║ ", style=theme.BORDER)
-    line.append(body, style=style)
-    line.append(" " * padding)
-    line.append(" ║", style=theme.BORDER)
-    return line
 
 
 def render_pending_region(handles: list[JobHandle], phase: int) -> Group:
@@ -90,8 +55,8 @@ def render_pending_region(handles: list[JobHandle], phase: int) -> Group:
         done = status != "pending"
         stamp_text, stamp_style = _MINI_STAMP[status]
 
-        parts.append(_bordered_line(_label_with_dots(handle.label, phase, done)))
-        parts.append(_bordered_split("", stamp_text, stamp_style))
+        parts.append(bordered_line(_label_with_dots(handle.label, phase, done)))
+        parts.append(bordered_split("", stamp_text, stamp_style))
     return Group(*parts)
 
 
@@ -110,10 +75,9 @@ class PendingJobsRegion:
         self._phase = 0
         self._live: Live | None = None
         self._ticker: asyncio.Task[None] | None = None
-        self._use_live = console.is_terminal
 
     async def __aenter__(self) -> Self:
-        if self._use_live:
+        if self._console.is_terminal:
             self._live = Live(
                 self._make_renderable(),
                 console=self._console,

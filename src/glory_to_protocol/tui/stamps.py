@@ -8,7 +8,7 @@ from rich.table import Table
 from rich.text import Text
 
 from glory_to_protocol.tui import theme
-from glory_to_protocol.tui.logo import LOGO_SMALL
+from glory_to_protocol.tui.logo import logo_small
 
 
 @dataclass(frozen=True)
@@ -24,8 +24,8 @@ ORDER = StampKind("ПРИКАЗ", "DIRECT ORDER", theme.STAMP_ORDER)
 REVIEW = StampKind("К СВЕДЕНИЮ", "FOR REVIEW", theme.STAMP_REVIEW)
 
 
-def _stamp(kind: StampKind, label: str, detail: str) -> Group:
-    logo = Text(LOGO_SMALL, style=kind.style)
+def _stamp(kind: StampKind, label: str, detail: str) -> Table:
+    logo = Text(logo_small(), style=kind.style)
     timestamp = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
 
     head = Text()
@@ -44,20 +44,20 @@ def _stamp(kind: StampKind, label: str, detail: str) -> Group:
     table.add_column(no_wrap=True)
     table.add_column()
     table.add_row(logo, right)
-    return Group(table)
+    return table
 
 
-def stamp_approve(label: str, detail: str = "") -> Group:
+def stamp_approve(label: str, detail: str = "") -> Table:
     return _stamp(APPROVE, label, detail)
 
 
-def stamp_reject(label: str, detail: str = "") -> Group:
+def stamp_reject(label: str, detail: str = "") -> Table:
     return _stamp(REJECT, label, detail)
 
 
-def stamp_order(label: str, detail: str = "") -> Group:
+def stamp_order(label: str, detail: str = "") -> Table:
     return _stamp(ORDER, label, detail)
 
 
-def stamp_review(label: str, detail: str = "") -> Group:
+def stamp_review(label: str, detail: str = "") -> Table:
     return _stamp(REVIEW, label, detail)
