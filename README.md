@@ -15,6 +15,9 @@
 - [ОГЛАВЛЕНИЕ · Index](#оглавление--index)
 - [ПОЛЕ № 1 · Purpose](#поле--1--purpose)
 - [ПОЛЕ № 2 · Installation](#поле--2--installation)
+  - [pip](#pip)
+  - [uv](#uv)
+  - [poetry](#poetry)
 - [ПОЛЕ № 3 · Usage](#поле--3--usage)
 - [ПОЛЕ № 4 · Layout](#поле--4--layout)
 - [ПОЛЕ № 5 · Status](#поле--5--status)
@@ -29,7 +32,23 @@ _TBD_
 
 ## ПОЛЕ № 2 · Installation
 
-_TBD_
+### pip
+
+```bash
+pip install glory-to-protocol
+```
+
+### uv
+
+```bash
+uv add glory-to-protocol
+```
+
+### poetry
+
+```bash
+poetry add glory-to-protocol
+```
 
 ## ПОЛЕ № 3 · Usage
 
