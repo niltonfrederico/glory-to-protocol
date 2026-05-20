@@ -76,7 +76,7 @@ def _render(console: Console) -> None:
         form.line()
         form.line("Quebra de linha — misto latino + cirílico:", style=theme.HEADER)
         form.line(
-            "Norman, Директор НИРВЫТЕХ, recebeu directive #4711 do Gensek sobre "
+            "Norman, Директор NIRVYTEKH, recebeu directive #4711 do Gensek sobre "
             "распределение бюджета entre as quatro diretorias internas do bureau "
             "para o próximo período контроля.",
             style=theme.BODY,

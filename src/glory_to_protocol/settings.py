@@ -31,9 +31,9 @@ class ProtocolSettings(BaseSettings):
     logo_text: str = Field(_DEFAULT_APP_NAME)
     small_logo_text: str = Field(_DEFAULT_APP_NAME)
 
-    bureau_title: str = Field("БЮРО НИРВЫТЕХ · Bureau of Computational Technology")
+    bureau_title: str = Field("БЮРО NIRVYTEKH · Bureau of Computational Technology")
     director_name: str = Field("Норман")
-    director_signature: str = Field("Подписано: Норман, Директор НИРВЫТЕХ")
+    director_signature: str = Field("Подписано: Норман, Директор NIRVYTEKH")
 
     ascii: ASCIISettings = ASCIISettings()
 

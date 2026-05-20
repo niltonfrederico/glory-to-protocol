@@ -28,7 +28,7 @@ def test_should_keep_stable_session_id_across_renders(monkeypatch: pytest.Monkey
 
 def test_should_use_default_nirvytekh_strings_when_no_override() -> None:
     output = _render_to_string(render_header())
-    assert "БЮРО НИРВЫТЕХ" in output
+    assert "БЮРО NIRVYTEKH" in output
     assert "Норман" in output
 
 
@@ -46,7 +46,7 @@ def test_should_use_default_signature_when_form_signature_not_overridden() -> No
     with Form(title="t", console=console, show_header=False):
         pass
     output = buf.getvalue()
-    assert "Подписано: Норман, Директор НИРВЫТЕХ" in output
+    assert "Подписано: Норман, Директор NIRVYTEKH" in output
 
 
 def test_should_use_custom_signature_when_form_signature_overridden() -> None:
