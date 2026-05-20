@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD041 -->
 <p align="center">
-  <img src="assets/header-en-us.svg" alt="glory-to-protocol — Bureau of Computational Technology" width="880">
+  <img src="assets/svg/header-en-us.svg" alt="glory-to-protocol — Bureau of Computational Technology" width="880">
 </p>
 
 ## СВОДКА · TL;DR
@@ -12,7 +12,7 @@ ticker for background jobs. Built because useful tools and funny tools
 rarely overlap.
 
 <p align="center">
-  <img src="assets/showcase.gif" alt="protocol-showcase — all TUI components rendered" width="900">
+  <img src="assets/gifs/showcase.gif" alt="protocol-showcase — all TUI components rendered" width="900">
 </p>
 
 ## ОГЛАВЛЕНИЕ · Index
@@ -190,7 +190,7 @@ Methods: `line(text, style=None, *, wrap=True)`, `divider()`, `stamp(...)`,
 #### Logo
 
 <p align="center">
-  <img src="assets/showcase-logo.gif" alt="logo component" width="900">
+  <img src="assets/gifs/showcase-logo.gif" alt="logo component" width="900">
 </p>
 
 Two ASCII logo renderers driven by `logo_text` and `small_logo_text`:
@@ -208,7 +208,7 @@ settings. Results are memoized — `configure()` invalidates the cache.
 #### Palette
 
 <p align="center">
-  <img src="assets/showcase-palette.gif" alt="theme palette" width="900">
+  <img src="assets/gifs/showcase-palette.gif" alt="theme palette" width="900">
 </p>
 
 The `theme` module exposes named Rich `Style` objects for consistent
@@ -230,7 +230,7 @@ Other roles in the palette: `theme.HEADER`, `theme.BORDER`,
 #### Wrap
 
 <p align="center">
-  <img src="assets/showcase-wrap.gif" alt="line wrap behavior" width="900">
+  <img src="assets/gifs/showcase-wrap.gif" alt="line wrap behavior" width="900">
 </p>
 
 `Form.line(text)` cell-wraps to the form's inner width, handling Latin,
@@ -245,7 +245,7 @@ form.line(long_text, wrap=False)    # truncate to one line
 #### Stamps
 
 <p align="center">
-  <img src="assets/showcase-stamps.gif" alt="stamp variants" width="900">
+  <img src="assets/gifs/showcase-stamps.gif" alt="stamp variants" width="900">
 </p>
 
 Four stamp variants encode the bureau's terminal decisions on a request.
@@ -274,7 +274,7 @@ Signature: `stamp_<variant>(label: str, detail: str = "") -> Table`.
 ### Background jobs
 
 <p align="center">
-  <img src="assets/showcase-jobs.gif" alt="background jobs live region" width="900">
+  <img src="assets/gifs/showcase-jobs.gif" alt="background jobs live region" width="900">
 </p>
 
 `Form.run_pending(jobs)` fans out a list of `Job`s as async tasks and renders

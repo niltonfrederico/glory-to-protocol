@@ -1,4 +1,4 @@
-Output assets/showcase-logo.gif
+Output assets/gifs/showcase-logo.gif
 
 Set Shell "bash"
 Set FontSize 13

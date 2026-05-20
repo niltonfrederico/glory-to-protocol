@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/header-true-en-us.svg" alt="glory-to-protocol — Directorate of Internal Affairs · WE ARE WATCHING" width="880">
+  <img src="assets/svg/header-true-en-us.svg" alt="glory-to-protocol — Directorate of Internal Affairs · WE ARE WATCHING" width="880">
 </p>
 
 # True Code of Conduct
@@ -173,7 +173,7 @@ weighing the credibility of a report filed about conduct that did occur here.
 ## Section VIII — About the Rubber Duct
 
 <p align="center">
-  <img src="assets/stamp-redacted-en-us.svg" alt="REDACTED" width="480">
+  <img src="assets/svg/stamp-redacted-en-us.svg" alt="REDACTED" width="480">
 </p>
 
 ## Attribution
