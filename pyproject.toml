@@ -1,6 +1,6 @@
 [project]
 name = "glory-to-protocol"
-version = "0.1.1"
+version = "0.1.2"
 description = "Deadpan state-bureau TUI library for Typer CLIs — framed forms, decision stamps, themed help, ASCII header, live jobs ticker."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -120,7 +120,7 @@ force-single-line = true
 quote-style = "double"
 
 [tool.bumpversion]
-current_version = "0.1.1"
+current_version = "0.1.2"
 allow_dirty = false
 commit = true
 tag = true
