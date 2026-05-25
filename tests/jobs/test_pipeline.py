@@ -6,8 +6,29 @@ import pytest
 
 from glory_to_protocol.jobs.pipeline import PipelineFailed
 from glory_to_protocol.jobs.pipeline import PipelineRunner
+from glory_to_protocol.jobs.runner import JobHandle
 from glory_to_protocol.jobs.types import Job
 from glory_to_protocol.jobs.types import JobOutcome
+
+
+async def test_should_noop_when_pipeline_has_no_jobs() -> None:
+    async with PipelineRunner() as p:
+        pass
+    assert p.outcomes == []
+
+
+async def test_should_log_and_swallow_when_pipeline_on_success_raises() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async def bad_after(outcome: JobOutcome) -> None:
+        raise RuntimeError("callback exploded")
+
+    async with PipelineRunner() as p:
+        p.spawn(Job("good", ok), on_success=bad_after)
+
+    [outcome] = p.outcomes
+    assert outcome.status == "ok"
 
 
 async def test_should_run_jobs_in_order_when_all_succeed() -> None:
@@ -157,6 +178,161 @@ def test_should_raise_when_spawn_called_outside_async_context() -> None:
     p = PipelineRunner()
     with pytest.raises(RuntimeError):
         p.spawn(Job("never", lambda: asyncio.sleep(0)))
+
+
+async def test_should_invoke_on_success_when_pipeline_job_succeeds() -> None:
+    seen: list[str] = []
+
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async def after(outcome: JobOutcome) -> None:
+        seen.append(outcome.label)
+
+    async with PipelineRunner() as p:
+        p.spawn(Job("a", ok), on_success=after)
+        p.spawn(Job("b", ok), on_success=after)
+
+    assert seen == ["a", "b"]
+
+
+async def test_should_skip_on_success_for_unreached_pipeline_jobs() -> None:
+    seen: list[str] = []
+
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async def boom() -> None:
+        raise RuntimeError("nope")
+
+    async def after(outcome: JobOutcome) -> None:
+        seen.append(outcome.label)
+
+    with pytest.raises(PipelineFailed):
+        async with PipelineRunner() as p:
+            p.spawn(Job("a", ok), on_success=after)
+            p.spawn(Job("b", boom), on_success=after)
+            p.spawn(Job("c", ok), on_success=after)
+
+    assert seen == ["a"]
+
+
+async def test_should_fail_pipeline_with_timeout_when_job_exceeds_timeout() -> None:
+    async def slow() -> None:
+        await asyncio.sleep(60)
+
+    with pytest.raises(PipelineFailed) as exc_info:
+        async with PipelineRunner() as p:
+            p.spawn(Job("slow", slow), timeout=0.05)
+
+    assert isinstance(exc_info.value.failed.error, TimeoutError)
+
+
+async def test_should_trigger_lifo_rollback_when_pipeline_job_times_out() -> None:
+    undone: list[str] = []
+
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async def slow() -> None:
+        await asyncio.sleep(60)
+
+    async def undo_a(outcome: JobOutcome) -> None:
+        undone.append("a")
+
+    async def undo_b(outcome: JobOutcome) -> None:
+        undone.append("b")
+
+    with pytest.raises(PipelineFailed):
+        async with PipelineRunner() as p:
+            p.spawn(Job("a", ok), rollback=undo_a)
+            p.spawn(Job("b", slow), rollback=undo_b, timeout=0.05)
+
+    assert undone == ["a"]
+
+
+async def test_should_raise_when_pipeline_max_children_exceeded() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async with PipelineRunner(max_children=2) as p:
+        p.spawn(Job("a", ok))
+        p.spawn(Job("b", ok))
+        with pytest.raises(RuntimeError, match="max_children=2"):
+            p.spawn(Job("c", ok))
+
+
+async def test_should_allow_unbounded_pipeline_when_max_children_zero() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async with PipelineRunner(max_children=0) as p:
+        for i in range(50):
+            p.spawn(Job(f"j{i}", ok))
+
+    assert len(p.outcomes) == 50
+
+
+async def test_should_reject_pipeline_recursion_with_skipped_in_warn_mode() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    captured: dict[str, object] = {}
+
+    async def callback(outcome: JobOutcome) -> None:
+        captured["handle"] = p.spawn(Job("child", ok))
+
+    p = PipelineRunner(on_recursion="warn")
+    async with p:
+        p.spawn(Job("parent", ok), on_success=callback)
+
+    child = captured["handle"]
+    assert isinstance(child, JobHandle)
+    assert child.status == "skipped"
+    assert [h.label for h in p.handles] == ["parent"]
+
+
+async def test_should_raise_on_pipeline_recursion_in_raise_mode() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    errors: list[BaseException] = []
+
+    async def callback(outcome: JobOutcome) -> None:
+        try:
+            p.spawn(Job("child", ok))
+        except RuntimeError as err:
+            errors.append(err)
+
+    p = PipelineRunner(on_recursion="raise")
+    async with p:
+        p.spawn(Job("parent", ok), on_success=callback)
+
+    assert len(errors) == 1
+
+
+def test_should_raise_when_max_children_negative() -> None:
+    with pytest.raises(ValueError):
+        PipelineRunner(max_children=-1)
+
+
+async def test_should_allow_nested_pipeline_runner_inside_callback() -> None:
+    inner_outcomes: list[str] = []
+
+    async def leaf() -> None:
+        await asyncio.sleep(0)
+
+    async def nested_pipeline_callback(outcome: JobOutcome) -> None:
+        async with PipelineRunner() as inner:
+            inner.spawn(Job("child-a", leaf))
+            inner.spawn(Job("child-b", leaf))
+        inner_outcomes.extend(o.label for o in inner.outcomes)
+
+    async with PipelineRunner() as outer:
+        outer.spawn(Job("parent", leaf), on_success=nested_pipeline_callback)
+
+    assert inner_outcomes == ["child-a", "child-b"]
+    assert [o.status for o in outer.outcomes] == ["ok"]
 
 
 async def test_should_skip_execution_when_context_body_raises() -> None:

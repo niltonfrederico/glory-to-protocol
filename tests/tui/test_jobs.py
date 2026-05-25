@@ -7,6 +7,7 @@ from rich.console import Console
 
 from glory_to_protocol.jobs.runner import JobHandle
 from glory_to_protocol.jobs.types import Job
+from glory_to_protocol.jobs.types import JobStatus
 from glory_to_protocol.tui import theme
 from glory_to_protocol.tui.forms import Form
 from glory_to_protocol.tui.jobs import render_pending_region
@@ -30,8 +31,8 @@ def test_should_animate_trailing_dots_when_phase_increments(snapshot_console: Co
     ("handle", "expected_stamp"),
     [
         (JobHandle(label="anything"), "[★ ···  ★ ]"),
-        (JobHandle(label="auditoria", status="ok"), "[★  OK  ★ ]"),
-        (JobHandle(label="ledger", status="fail"), "[★ FAIL ★ ]"),
+        (JobHandle(label="auditoria", status=JobStatus.OK), "[★  OK  ★ ]"),
+        (JobHandle(label="ledger", status=JobStatus.FAIL), "[★ FAIL ★ ]"),
     ],
 )
 def test_should_render_mini_stamp_matching_status_when_job_rendered(
@@ -44,7 +45,7 @@ def test_should_render_mini_stamp_matching_status_when_job_rendered(
 
 
 def test_should_right_align_mini_stamp_within_form_width(snapshot_console: Console) -> None:
-    handle = JobHandle(label="x", status="ok")
+    handle = JobHandle(label="x", status=JobStatus.OK)
     text = _render([handle], phase=0, console=snapshot_console)
     lines = [line for line in text.splitlines() if line.strip()]
     stamp_line = lines[1]

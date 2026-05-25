@@ -1,16 +1,19 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 import time
 from dataclasses import dataclass
-from dataclasses import field
 from types import TracebackType
 from typing import Self
 
 from glory_to_protocol.jobs.runner import JobHandle
+from glory_to_protocol.jobs.runner import _rejected_handle
 from glory_to_protocol.jobs.types import Job
+from glory_to_protocol.jobs.types import JobCallback
 from glory_to_protocol.jobs.types import JobOutcome
 from glory_to_protocol.jobs.types import JobStatus
+from glory_to_protocol.jobs.types import RecursionPolicy
 from glory_to_protocol.jobs.types import RollbackFn
 
 _logger = logging.getLogger("glory_to_protocol.jobs")
@@ -21,6 +24,8 @@ class _Entry:
     job: Job
     handle: JobHandle
     rollback: RollbackFn | None
+    on_success: JobCallback | None
+    timeout: float | None
 
 
 class PipelineFailed(Exception):
@@ -45,27 +50,37 @@ class PipelineFailed(Exception):
         self.rollback_errors = rollback_errors
 
 
-@dataclass(slots=True)
-class _RunState:
-    completed: list[_Entry] = field(default_factory=list)
-
-
 class PipelineRunner:
     """Async context manager that runs jobs sequentially, aborting on failure.
 
     Unlike `JobRunner` (fan-out, isolated failures), `PipelineRunner` treats the
-    registered jobs as a transaction. `spawn` only records the job + rollback;
+    registered jobs as a transaction. `spawn` only records the job + callbacks;
     execution happens on context exit. The first failure stops the pipeline,
     triggers LIFO rollback of previously-completed jobs, marks unreached jobs
     as `"skipped"`, and re-raises as `PipelineFailed`.
 
     If the context body itself raises, no jobs run and the body's exception
     propagates unchanged (nothing to roll back).
+
+    `max_children` caps registered jobs (0 = unbounded); exceeding the cap
+    always raises. `on_recursion` governs `spawn` calls made after execution
+    has started (e.g. from a callback): `"raise"` errors, `"warn"` logs and
+    returns a synthetic skipped handle that is not enrolled in the pipeline.
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        max_children: int = 12,
+        on_recursion: RecursionPolicy | str = RecursionPolicy.RAISE,
+    ) -> None:
+        if max_children < 0:
+            raise ValueError("max_children must be >= 0 (0 means unbounded)")
         self._entries: list[_Entry] = []
         self._entered = False
+        self._closing = False
+        self._max_children = max_children
+        self._on_recursion = RecursionPolicy(on_recursion)
 
     async def __aenter__(self) -> Self:
         self._entered = True
@@ -74,20 +89,24 @@ class PipelineRunner:
     async def __aexit__(
         self,
         exc_type: type[BaseException] | None,
-        exc: BaseException | None,
-        tb: TracebackType | None,
+        _exc: BaseException | None,
+        _tb: TracebackType | None,
     ) -> None:
         if exc_type is not None:
+            self._closing = True
             return
         if not self._entries:
+            self._closing = True
             return
+
+        self._closing = True
 
         completed: list[_Entry] = []
         failed_entry: _Entry | None = None
 
         for entry in self._entries:
-            outcome = await self._run_one(entry.job, entry.handle)
-            if outcome.status == "ok":
+            outcome = await self._run_one(entry)
+            if outcome.status is JobStatus.OK:
                 completed.append(entry)
                 continue
             failed_entry = entry
@@ -98,10 +117,10 @@ class PipelineRunner:
 
         idx = self._entries.index(failed_entry)
         for entry in self._entries[idx + 1 :]:
-            entry.handle.status = "skipped"
+            entry.handle.status = JobStatus.SKIPPED
             entry.handle.outcome = JobOutcome(
                 label=entry.job.label,
-                status="skipped",
+                status=JobStatus.SKIPPED,
                 error=None,
                 duration_ms=0,
             )
@@ -130,11 +149,35 @@ class PipelineRunner:
             rollback_errors=rollback_errors,
         )
 
-    def spawn(self, job: Job, *, rollback: RollbackFn | None = None) -> JobHandle:
+    def spawn(
+        self,
+        job: Job,
+        *,
+        rollback: RollbackFn | None = None,
+        on_success: JobCallback | None = None,
+        timeout: float | None = None,
+    ) -> JobHandle:
         if not self._entered:
             raise RuntimeError("PipelineRunner.spawn called outside of async context")
+        if self._closing:
+            reason = "spawn called after pipeline started (callback recursion)"
+            if self._on_recursion is RecursionPolicy.RAISE:
+                raise RuntimeError(f"PipelineRunner.spawn rejected: {reason}")
+            return _rejected_handle(job.label, reason)
+        if self._max_children > 0 and len(self._entries) >= self._max_children:
+            raise RuntimeError(
+                f"PipelineRunner.spawn rejected: max_children={self._max_children} reached"
+            )
         handle = JobHandle(label=job.label)
-        self._entries.append(_Entry(job=job, handle=handle, rollback=rollback))
+        self._entries.append(
+            _Entry(
+                job=job,
+                handle=handle,
+                rollback=rollback,
+                on_success=on_success,
+                timeout=timeout,
+            )
+        )
         return handle
 
     @property
@@ -145,15 +188,20 @@ class PipelineRunner:
     def outcomes(self) -> list[JobOutcome]:
         return [e.handle.outcome for e in self._entries if e.handle.outcome is not None]
 
-    async def _run_one(self, job: Job, handle: JobHandle) -> JobOutcome:
+    async def _run_one(self, entry: _Entry) -> JobOutcome:
+        job = entry.job
+        handle = entry.handle
         start = time.monotonic()
         error: Exception | None = None
         try:
-            await job.coro_factory()
+            if entry.timeout is None:
+                await job.coro_factory()
+            else:
+                await asyncio.wait_for(job.coro_factory(), entry.timeout)
         except Exception as err:
             error = err
         duration_ms = int((time.monotonic() - start) * 1000)
-        status: JobStatus = "fail" if error is not None else "ok"
+        status = JobStatus.FAIL if error is not None else JobStatus.OK
         outcome = JobOutcome(label=job.label, status=status, error=error, duration_ms=duration_ms)
         handle.outcome = outcome
         handle.status = status
@@ -166,4 +214,13 @@ class PipelineRunner:
             )
         else:
             _logger.info("pipeline job ok: label=%r duration_ms=%d", job.label, duration_ms)
+            if entry.on_success is not None:
+                try:
+                    await entry.on_success(outcome)
+                except Exception as cb_err:
+                    _logger.warning(
+                        "on_success failed: label=%r error=%r",
+                        job.label,
+                        cb_err,
+                    )
         return outcome

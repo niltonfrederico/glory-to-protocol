@@ -30,9 +30,10 @@ def _mini_stamp(label: str) -> str:
 
 
 _MINI_STAMP: dict[JobStatus, tuple[str, Style]] = {
-    "pending": (_mini_stamp("···"), theme.MUTED),
-    "ok": (_mini_stamp("OK"), theme.STAMP_APPROVE),
-    "fail": (_mini_stamp("FAIL"), theme.STAMP_REJECT),
+    JobStatus.PENDING: (_mini_stamp("···"), theme.MUTED),
+    JobStatus.OK: (_mini_stamp("OK"), theme.STAMP_APPROVE),
+    JobStatus.FAIL: (_mini_stamp("FAIL"), theme.STAMP_REJECT),
+    JobStatus.SKIPPED: (_mini_stamp("SKIP"), theme.MUTED),
 }
 
 
@@ -52,7 +53,7 @@ def render_pending_region(handles: list[JobHandle], phase: int) -> Group:
     parts: list[Text] = []
     for handle in handles:
         status: JobStatus = handle.status
-        done = status != "pending"
+        done = status is not JobStatus.PENDING
         stamp_text, stamp_style = _MINI_STAMP[status]
 
         parts.append(bordered_line(_label_with_dots(handle.label, phase, done)))

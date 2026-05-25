@@ -4,6 +4,7 @@ import asyncio
 
 import pytest
 
+from glory_to_protocol.jobs.runner import JobHandle
 from glory_to_protocol.jobs.runner import JobRunner
 from glory_to_protocol.jobs.types import Job
 
@@ -219,3 +220,159 @@ async def test_should_log_and_swallow_when_rollback_raises() -> None:
     assert outcome.status == "fail"
     assert isinstance(outcome.error, RuntimeError)
     assert str(outcome.error) == "primary"
+
+
+async def test_should_invoke_on_success_when_job_succeeds() -> None:
+    seen: list[str] = []
+
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async def after(outcome):  # type: ignore[no-untyped-def]
+        seen.append(outcome.label)
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("good", ok), on_success=after)
+
+    assert seen == ["good"]
+
+
+async def test_should_skip_on_success_when_job_fails() -> None:
+    seen: list[str] = []
+
+    async def boom() -> None:
+        raise RuntimeError("nope")
+
+    async def after(outcome):  # type: ignore[no-untyped-def]
+        seen.append(outcome.label)
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("bad", boom), on_success=after)
+
+    assert seen == []
+
+
+async def test_should_log_and_swallow_when_on_success_raises() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async def bad_after(outcome):  # type: ignore[no-untyped-def]
+        raise RuntimeError("callback exploded")
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("good", ok), on_success=bad_after)
+
+    [outcome] = runner.outcomes
+    assert outcome.status == "ok"
+
+
+async def test_should_fail_with_timeout_when_job_exceeds_timeout() -> None:
+    async def slow() -> None:
+        await asyncio.sleep(60)
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("slow", slow), timeout=0.05)
+
+    [outcome] = runner.outcomes
+    assert outcome.status == "fail"
+    assert isinstance(outcome.error, TimeoutError)
+
+
+async def test_should_invoke_rollback_when_timeout_triggers_failure() -> None:
+    undone: list[str] = []
+
+    async def slow() -> None:
+        await asyncio.sleep(60)
+
+    async def undo(outcome):  # type: ignore[no-untyped-def]
+        undone.append(outcome.label)
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("slow", slow), timeout=0.05, rollback=undo)
+
+    assert undone == ["slow"]
+
+
+async def test_should_raise_when_max_children_exceeded() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0.01)
+
+    async with JobRunner(max_children=2) as runner:
+        runner.spawn(Job("a", ok))
+        runner.spawn(Job("b", ok))
+        with pytest.raises(RuntimeError, match="max_children=2"):
+            runner.spawn(Job("c", ok))
+
+
+async def test_should_allow_unbounded_spawn_when_max_children_zero() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async with JobRunner(max_children=0) as runner:
+        for i in range(50):
+            runner.spawn(Job(f"j{i}", ok))
+
+    assert len(runner.outcomes) == 50
+
+
+async def test_should_reject_with_skipped_handle_when_recursion_in_warn_mode() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    captured: dict[str, object] = {}
+
+    async def callback(outcome):  # type: ignore[no-untyped-def]
+        captured["handle"] = runner.spawn(Job("child", ok))
+
+    runner = JobRunner(on_recursion="warn")
+    async with runner:
+        runner.spawn(Job("parent", ok), on_success=callback)
+
+    child = captured["handle"]
+    assert isinstance(child, JobHandle)
+    assert child.status == "skipped"
+    assert [h.label for h in runner.handles] == ["parent"]
+
+
+def test_should_raise_when_max_children_negative() -> None:
+    with pytest.raises(ValueError):
+        JobRunner(max_children=-1)
+
+
+async def test_should_allow_nested_job_runner_inside_callback() -> None:
+    inner_outcomes: list[str] = []
+
+    async def leaf() -> None:
+        await asyncio.sleep(0)
+
+    async def nested_runner_callback(outcome):  # type: ignore[no-untyped-def]
+        async with JobRunner() as inner:
+            inner.spawn(Job("child-a", leaf))
+            inner.spawn(Job("child-b", leaf))
+        inner_outcomes.extend(o.label for o in inner.outcomes)
+
+    async with JobRunner() as outer:
+        outer.spawn(Job("parent", leaf), on_success=nested_runner_callback)
+
+    assert inner_outcomes == ["child-a", "child-b"]
+    assert [o.status for o in outer.outcomes] == ["ok"]
+
+
+async def test_should_raise_when_recursion_in_raise_mode() -> None:
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    errors: list[BaseException] = []
+
+    async def callback(outcome):  # type: ignore[no-untyped-def]
+        try:
+            runner.spawn(Job("child", ok))
+        except RuntimeError as err:
+            errors.append(err)
+
+    runner = JobRunner(on_recursion="raise")
+    async with runner:
+        runner.spawn(Job("parent", ok), on_success=callback)
+
+    assert len(errors) == 1
+    assert isinstance(errors[0], RuntimeError)

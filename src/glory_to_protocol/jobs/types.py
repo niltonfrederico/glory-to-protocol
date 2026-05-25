@@ -3,9 +3,30 @@ from __future__ import annotations
 from collections.abc import Awaitable
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Literal
+from enum import StrEnum
 
-JobStatus = Literal["pending", "ok", "fail", "skipped"]
+
+class JobStatus(StrEnum):
+    """Terminal state of a job (or `PENDING` while still running).
+
+    `StrEnum` so existing string comparisons (`outcome.status == "ok"`) keep
+    working; new code should prefer the enum members for clarity.
+    """
+
+    PENDING = "pending"
+    OK = "ok"
+    FAIL = "fail"
+    SKIPPED = "skipped"
+
+
+class RecursionPolicy(StrEnum):
+    """How a runner reacts when `spawn` is called after the context starts
+    closing — typically because a callback called `spawn` on the same runner.
+    """
+
+    RAISE = "raise"
+    WARN = "warn"
+
 
 JobCoroFactory = Callable[[], Awaitable[None]]
 
@@ -33,3 +54,4 @@ class JobOutcome:
 
 
 RollbackFn = Callable[[JobOutcome], Awaitable[None]]
+JobCallback = Callable[[JobOutcome], Awaitable[None]]

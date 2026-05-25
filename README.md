@@ -345,28 +345,55 @@ Outcomes returned by `run_pending`:
 The runner never raises on individual job failure; the caller decides how a
 failed background job affects the foreground stamp.
 
-#### Rollback (per-job, fan-out)
+#### Callbacks (per-job, fan-out)
 
-`JobRunner.spawn` accepts an optional `rollback` callback that fires **only**
-when the job fails — never on success, never on cancellation. The rollback
-receives the failed `JobOutcome`. If the rollback itself raises, the error is
-logged and swallowed so it cannot mask the original failure or break sibling
+`JobRunner.spawn` takes three optional per-job hooks:
+
+| Kwarg | Fires when | Signature |
+| ------------ | -------------------- | ------------------------------------------ |
+| `rollback` | job ends in `fail` | `async (outcome: JobOutcome) -> None` |
+| `on_success` | job ends in `ok` | `async (outcome: JobOutcome) -> None` |
+| `timeout` | wall-clock cap (s) | `float` |
+
+`rollback` and `on_success` are mutually exclusive in practice — only one runs
+per job. Cancellation skips both. If a callback itself raises, the error is
+logged and swallowed so it cannot mask the original outcome or break sibling
 isolation.
+
+`timeout` wraps the job's coroutine in `asyncio.wait_for`; an expired timeout
+produces a `fail` outcome with a `TimeoutError`, which then triggers
+`rollback` like any other failure.
 
 ```python
 from glory_to_protocol.jobs import Job, JobOutcome, JobRunner
 
 
-async def write_temp_file() -> None:
-    ...  # may raise
-
-
-async def remove_temp_file(outcome: JobOutcome) -> None:
-    ...  # compensation
+async def write_temp_file() -> None: ...
+async def remove_temp_file(outcome: JobOutcome) -> None: ...
+async def audit(outcome: JobOutcome) -> None: ...
 
 
 async with JobRunner() as runner:
-    runner.spawn(Job("stage temp file", write_temp_file), rollback=remove_temp_file)
+    runner.spawn(
+        Job("stage temp file", write_temp_file),
+        rollback=remove_temp_file,
+        on_success=audit,
+        timeout=5.0,
+    )
+```
+
+#### Runner safeguards
+
+Both `JobRunner` and `PipelineRunner` accept two ctor kwargs that bound
+fan-out and protect against callback-induced recursion:
+
+| Kwarg | Default | Effect |
+| --------------- | --------- | --------------------------------------------------------------------- |
+| `max_children` | `12` | Cap on jobs registered via `spawn`. `0` disables the cap (unbounded). Exceeding always raises (programmer error). |
+| `on_recursion` | `"raise"` | `spawn` called after the context starts closing (e.g. from inside a callback) raises. `"warn"` logs and returns a synthetic `"skipped"` handle that is not enrolled. |
+
+```python
+runner = JobRunner(max_children=0, on_recursion="warn")
 ```
 
 #### Pipelines (sequential, transactional)
@@ -414,11 +441,10 @@ Semantics:
 
 ## ПОЛЕ № 4 · Status & Roadmap
 
-**Beta (0.1.1).** The public surface — `Form`, the four stamps, `logo_large` / `logo_small`, `theme`, `configure()`, `Job` / `run_pending`, `JobRunner` + `PipelineRunner` (with per-job rollback), and `ProtocolTyper` / `make_app` — is stable enough to drive a real CLI (91 tests, ~98% coverage). Minor versions may still refine APIs before 1.0.
+**Beta (0.1.1).** The public surface — `Form`, the four stamps, `logo_large` / `logo_small`, `theme`, `configure()`, `Job` / `run_pending`, `JobRunner` + `PipelineRunner` (with per-job `rollback`, `on_success`, `timeout`, `max_children`, and `on_recursion` policy), and `ProtocolTyper` / `make_app` — is stable enough to drive a real CLI (112 tests, ~98% coverage). Minor versions may still refine APIs before 1.0.
 
 Planned:
 
-- Per-job on-success hooks (rollback already covers on-failure)
 - Long-running jobs (progress reporting, cancellation surface)
 - Better tracebacks (themed, framed inside the bureau form)
 - Custom component authoring (public composition API)

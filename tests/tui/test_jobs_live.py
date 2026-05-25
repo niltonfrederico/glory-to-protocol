@@ -6,6 +6,7 @@ from rich.console import Console
 
 from glory_to_protocol.jobs.runner import JobHandle
 from glory_to_protocol.jobs.types import Job
+from glory_to_protocol.jobs.types import JobStatus
 from glory_to_protocol.tui import theme
 from glory_to_protocol.tui._borders import bordered_split
 from glory_to_protocol.tui.forms import Form
@@ -36,5 +37,5 @@ async def test_should_drive_live_region_when_console_is_terminal() -> None:
 
 
 def test_should_render_pending_when_handle_status_pending() -> None:
-    handle = JobHandle(label="pendência", status="pending")
+    handle = JobHandle(label="pendência", status=JobStatus.PENDING)
     assert handle.done() is False
