@@ -177,7 +177,7 @@ The Directorate will not adjudicate disputes that occurred outside these
 premises. The Directorate may, however, **consider** outside conduct when
 weighing the credibility of a report filed about conduct that did occur here.
 
-## Section VIII — About the Rubber Duct
+## Section VIII — About the Rubber Duck
 
 <p align="center">
   <img src="assets/svg/stamp-redacted-en-us.svg" alt="REDACTED" width="480">

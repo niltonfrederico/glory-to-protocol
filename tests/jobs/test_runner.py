@@ -150,3 +150,72 @@ async def test_should_mark_job_failed_when_regular_exception_raised() -> None:
     [outcome] = runner.outcomes
     assert outcome.status == "fail"
     assert isinstance(outcome.error, ValueError)
+
+
+async def test_should_invoke_rollback_when_job_fails() -> None:
+    seen: list[str] = []
+
+    async def boom() -> None:
+        raise RuntimeError("nope")
+
+    async def undo(outcome):  # type: ignore[no-untyped-def]
+        seen.append(outcome.label)
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("bad", boom), rollback=undo)
+
+    assert seen == ["bad"]
+
+
+async def test_should_skip_rollback_when_job_succeeds() -> None:
+    seen: list[str] = []
+
+    async def ok() -> None:
+        await asyncio.sleep(0)
+
+    async def undo(outcome):  # type: ignore[no-untyped-def]
+        seen.append(outcome.label)
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("good", ok), rollback=undo)
+
+    assert seen == []
+
+
+async def test_should_skip_rollback_when_job_cancelled() -> None:
+    started = asyncio.Event()
+    seen: list[str] = []
+
+    async def long_running() -> None:
+        started.set()
+        await asyncio.sleep(60)
+
+    async def undo(outcome):  # type: ignore[no-untyped-def]
+        seen.append(outcome.label)
+
+    class Boom(RuntimeError):
+        pass
+
+    with pytest.raises(Boom):
+        async with JobRunner() as runner:
+            runner.spawn(Job("cancellable", long_running), rollback=undo)
+            await started.wait()
+            raise Boom("body fails")
+
+    assert seen == []
+
+
+async def test_should_log_and_swallow_when_rollback_raises() -> None:
+    async def boom() -> None:
+        raise RuntimeError("primary")
+
+    async def bad_undo(outcome):  # type: ignore[no-untyped-def]
+        raise RuntimeError("rollback exploded")
+
+    async with JobRunner() as runner:
+        runner.spawn(Job("bad", boom), rollback=bad_undo)
+
+    [outcome] = runner.outcomes
+    assert outcome.status == "fail"
+    assert isinstance(outcome.error, RuntimeError)
+    assert str(outcome.error) == "primary"

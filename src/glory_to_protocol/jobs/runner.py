@@ -10,6 +10,7 @@ from typing import Self
 from glory_to_protocol.jobs.types import Job
 from glory_to_protocol.jobs.types import JobOutcome
 from glory_to_protocol.jobs.types import JobStatus
+from glory_to_protocol.jobs.types import RollbackFn
 
 _logger = logging.getLogger("glory_to_protocol.jobs")
 
@@ -65,11 +66,11 @@ class JobRunner:
                 task.cancel()
         await asyncio.gather(*self._tasks, return_exceptions=True)
 
-    def spawn(self, job: Job) -> JobHandle:
+    def spawn(self, job: Job, *, rollback: RollbackFn | None = None) -> JobHandle:
         if not self._entered:
             raise RuntimeError("JobRunner.spawn called outside of async context")
         handle = JobHandle(label=job.label)
-        task = asyncio.create_task(self._run(job, handle), name=f"job:{job.label}")
+        task = asyncio.create_task(self._run(job, handle, rollback), name=f"job:{job.label}")
         self._handles.append(handle)
         self._tasks.append(task)
         return handle
@@ -82,7 +83,7 @@ class JobRunner:
     def outcomes(self) -> list[JobOutcome]:
         return [h.outcome for h in self._handles if h.outcome is not None]
 
-    async def _run(self, job: Job, handle: JobHandle) -> None:
+    async def _run(self, job: Job, handle: JobHandle, rollback: RollbackFn | None) -> None:
         start = time.monotonic()
         error: Exception | None = None
         try:
@@ -101,5 +102,14 @@ class JobRunner:
                 duration_ms,
                 error,
             )
+            if rollback is not None:
+                try:
+                    await rollback(outcome)
+                except Exception as rb_err:
+                    _logger.warning(
+                        "rollback failed: label=%r error=%r",
+                        job.label,
+                        rb_err,
+                    )
         else:
             _logger.info("job ok: label=%r duration_ms=%d", job.label, duration_ms)

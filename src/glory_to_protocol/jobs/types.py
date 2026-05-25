@@ -5,7 +5,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Literal
 
-JobStatus = Literal["pending", "ok", "fail"]
+JobStatus = Literal["pending", "ok", "fail", "skipped"]
 
 JobCoroFactory = Callable[[], Awaitable[None]]
 
@@ -30,3 +30,6 @@ class JobOutcome:
     status: JobStatus
     error: BaseException | None
     duration_ms: int
+
+
+RollbackFn = Callable[[JobOutcome], Awaitable[None]]

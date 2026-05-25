@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD041 -->
+
 <p align="center">
   <a href="README.md">
     <img src="https://img.shields.io/badge/read%20in-english-c0392b?style=for-the-badge" alt="Read in English">
@@ -32,16 +33,16 @@ raramente se cruzam.
 
 ## ОГЛАВЛЕНИЕ · Sumário
 
-- [СВОДКА · Resumo](#сводка--resumo)
-- [ОГЛАВЛЕНИЕ · Sumário](#оглавление--sumário)
-- [ПОЛЕ № 1 · Propósito](#поле--1--propósito)
-- [ПОЛЕ № 2 · Instalação](#поле--2--instalação)
+- [СВОДКА · Resumo](#%D1%81%D0%B2%D0%BE%D0%B4%D0%BA%D0%B0--resumo)
+- [ОГЛАВЛЕНИЕ · Sumário](#%D0%BE%D0%B3%D0%BB%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5--sum%C3%A1rio)
+- [ПОЛЕ № 1 · Propósito](#%D0%BF%D0%BE%D0%BB%D0%B5--1--prop%C3%B3sito)
+- [ПОЛЕ № 2 · Instalação](#%D0%BF%D0%BE%D0%BB%D0%B5--2--instala%C3%A7%C3%A3o)
   - [pip](#pip)
   - [uv](#uv)
   - [poetry](#poetry)
-- [ПОЛЕ № 3 · Uso](#поле--3--uso)
-  - [Configuração](#configuração)
-  - [Integração com Typer CLI](#integração-com-typer-cli)
+- [ПОЛЕ № 3 · Uso](#%D0%BF%D0%BE%D0%BB%D0%B5--3--uso)
+  - [Configuração](#configura%C3%A7%C3%A3o)
+  - [Integração com Typer CLI](#integra%C3%A7%C3%A3o-com-typer-cli)
   - [Componentes](#componentes)
     - [Form](#form)
     - [Logo](#logo)
@@ -49,8 +50,8 @@ raramente se cruzam.
     - [Wrap](#wrap)
     - [Carimbos](#carimbos)
   - [Jobs em background](#jobs-em-background)
-- [ПОЛЕ № 4 · Status & Roteiro](#поле--4--status--roteiro)
-- [ОТКАЗ · Isenção](#отказ--isenção)
+- [ПОЛЕ № 4 · Status & Roteiro](#%D0%BF%D0%BE%D0%BB%D0%B5--4--status--roteiro)
+- [ОТКАЗ · Isenção](#%D0%BE%D1%82%D0%BA%D0%B0%D0%B7--isen%C3%A7%C3%A3o)
 - [ВКЛАД · Contribuição](CONTRIBUTING.pt-br.md)
   - [Для граждан повышенного допуска · Para cidadãos de alta patente](TRUE_CONTRIBUTING.pt-br.md)
 - [КОДЕКС · Código de Conduta](CODE_OF_CONDUCT.pt-br.md)
@@ -66,7 +67,7 @@ emolduradas, quatro tipos de carimbo de decisão (`approve` / `reject` /
 logo ASCII e ticker ao vivo de jobs em background. A biblioteca oferece
 uma subclasse `ProtocolTyper` e o helper `make_app()` para que a moldura
 do bureau apareça em todo comando e sub-app sem fiação extra; veja
-[Integração com Typer CLI](#integração-com-typer-cli) abaixo.
+[Integração com Typer CLI](#integra%C3%A7%C3%A3o-com-typer-cli) abaixo.
 
 Construí isso porque eu vivia esbarrando em bibliotecas que eram *úteis* ou
 *divertidas*, e quase nunca as duas coisas. Queria que minhas próprias CLIs
@@ -77,7 +78,7 @@ efeito colateral.
 A estética — acentos cirílicos, títulos de bureau, carimbos sem ironia —
 saiu do jeito que saiu porque eu estava mergulhado em Papers, Please na
 época. A biblioteca não reusa uma linha de código nem um asset do jogo
-(veja a [isenção](#отказ--isenção)), mas a vibe é inconfundivelmente da
+(veja a [isenção](#%D0%BE%D1%82%D0%BA%D0%B0%D0%B7--isen%C3%A7%C3%A3o)), mas a vibe é inconfundivelmente da
 mesma prateleira.
 
 Uma nota sobre o russo: eu falo alguma coisa, e alguns termos aqui estão
@@ -115,15 +116,15 @@ A biblioteca expõe um único singleton `ProtocolSettings` que segura toda a
 marca de nível bureau. Os defaults renderizam o visual NIRVYTEKH direto da
 caixa; sobrescreva-os ao plugar a lib na sua própria CLI.
 
-| Campo                | Default                                                   | Efeito                                                  |
+| Campo | Default | Efeito |
 | -------------------- | --------------------------------------------------------- | ------------------------------------------------------- |
-| `app_name`           | `"Protocol"`                                              | Nome genérico do app (usado como fallback).             |
-| `logo_text`          | `"Protocol"`                                              | Texto renderizado como o logo ASCII grande (header).    |
-| `small_logo_text`    | `"Protocol"`                                              | Texto renderizado no logo pequeno emoldurado (carimbos).|
-| `bureau_title`       | `"БЮРО NIRVYTEKH · Bureau of Computational Technology"`   | Subtítulo abaixo do logo grande no header.              |
-| `director_name`      | `"Норман"`                                                | Nome do diretor exibido na meta-linha do header.        |
-| `director_signature` | `"Подписано: Норман, Директор NIRVYTEKH"`                 | Linha de assinatura no rodapé do form.                  |
-| `ascii.allowed_alphabet` | maiúsculas A–Z, 0–9                                   | Caracteres permitidos em `logo_text` / `small_logo_text`.|
+| `app_name` | `"Protocol"` | Nome genérico do app (usado como fallback). |
+| `logo_text` | `"Protocol"` | Texto renderizado como o logo ASCII grande (header). |
+| `small_logo_text` | `"Protocol"` | Texto renderizado no logo pequeno emoldurado (carimbos).|
+| `bureau_title` | `"БЮРО NIRVYTEKH · Bureau of Computational Technology"` | Subtítulo abaixo do logo grande no header. |
+| `director_name` | `"Норман"` | Nome do diretor exibido na meta-linha do header. |
+| `director_signature` | `"Подписано: Норман, Директор NIRVYTEKH"` | Linha de assinatura no rodapé do form. |
+| `ascii.allowed_alphabet` | maiúsculas A–Z, 0–9 | Caracteres permitidos em `logo_text` / `small_logo_text`.|
 
 `logo_text` é validado contra `ascii.allowed_alphabet` — passar caracteres
 fora do conjunto levanta `InvalidASCIICharactersError`.
@@ -202,12 +203,12 @@ with Form(title="version") as form:
 
 Parâmetros do construtor:
 
-| Parâmetro        | Tipo             | Default | Propósito                                                |
+| Parâmetro | Tipo | Default | Propósito |
 | ---------------- | ---------------- | ------- | -------------------------------------------------------- |
-| `title`          | `str`            | —       | Rótulo da aba na borda superior (ex.: `"version"`).      |
-| `console`        | `Console \| None`| `None`  | Injete um `Console` do Rich; criado automaticamente se omitido. |
-| `show_header`    | `bool`           | `True`  | Renderiza o bloco com logo grande + título do bureau no topo. |
-| `signature_text` | `str \| None`    | `None`  | Sobrescreve a assinatura do rodapé; default vem das settings. |
+| `title` | `str` | — | Rótulo da aba na borda superior (ex.: `"version"`). |
+| `console` | `Console \| None`| `None` | Injete um `Console` do Rich; criado automaticamente se omitido. |
+| `show_header` | `bool` | `True` | Renderiza o bloco com logo grande + título do bureau no topo. |
+| `signature_text` | `str \| None` | `None` | Sobrescreve a assinatura do rodapé; default vem das settings. |
 
 Métodos: `line(text, style=None, *, wrap=True)`, `divider()`, `stamp(...)`,
 `run_pending(jobs)`.
@@ -289,12 +290,12 @@ form.stamp(stamp_order("team 3 mobilization", "immediate execution"))
 form.stamp(stamp_review("monthly report", "awaiting Gensek review"))
 ```
 
-| Variante         | Rótulo (RU/EN)              | Usar para                                              |
+| Variante | Rótulo (RU/EN) | Usar para |
 | ---------------- | --------------------------- | ------------------------------------------------------ |
-| `stamp_approve`  | `ОДОБРЕНО / APPROVED`       | Solicitação aceita, ação completa.                     |
-| `stamp_reject`   | `ОТКАЗАНО / REJECTED`       | Solicitação negada; inclua `detail` com o motivo.      |
-| `stamp_order`    | `ПРИКАЗ / DIRECT ORDER`     | Imperativo — o bureau está ditando uma ação.           |
-| `stamp_review`   | `К СВЕДЕНИЮ / FOR REVIEW`   | Aguardando decisão externa (ex.: do Gensek).           |
+| `stamp_approve` | `ОДОБРЕНО / APPROVED` | Solicitação aceita, ação completa. |
+| `stamp_reject` | `ОТКАЗАНО / REJECTED` | Solicitação negada; inclua `detail` com o motivo. |
+| `stamp_order` | `ПРИКАЗ / DIRECT ORDER` | Imperativo — o bureau está ditando uma ação. |
+| `stamp_review` | `К СВЕДЕНИЮ / FOR REVIEW` | Aguardando decisão externa (ex.: do Gensek). |
 
 Assinatura: `stamp_<variant>(label: str, detail: str = "") -> Table`.
 
@@ -330,11 +331,11 @@ for outcome in outcomes:
 
 Campos de `Job`:
 
-| Campo          | Tipo                              | Default | Propósito                                              |
+| Campo | Tipo | Default | Propósito |
 | -------------- | --------------------------------- | ------- | ------------------------------------------------------ |
-| `label`        | `str`                             | —       | Exibido no ticker ao vivo.                             |
-| `coro_factory` | `Callable[[], Awaitable[None]]`   | —       | Factory que retorna a coroutine a ser aguardada.       |
-| `critical`     | `bool`                            | `False` | Só uma tag hoje; reservado para uso futuro de fail-fast.|
+| `label` | `str` | — | Exibido no ticker ao vivo. |
+| `coro_factory` | `Callable[[], Awaitable[None]]` | — | Factory que retorna a coroutine a ser aguardada. |
+| `critical` | `bool` | `False` | Só uma tag hoje; reservado para uso futuro de fail-fast.|
 
 `coro_factory` é uma **factory**, não uma coroutine — passar a coroutine
 direto a amarraria ao event loop errado. Embrulhe com `lambda` ou um `def`
@@ -342,23 +343,90 @@ que retorne o awaitable. Cada job recebe um awaitable fresco no spawn.
 
 Resultados retornados por `run_pending`:
 
-| Campo         | Tipo                            | Significado                                      |
+| Campo | Tipo | Significado |
 | ------------- | ------------------------------- | ------------------------------------------------ |
-| `label`       | `str`                           | Ecoa `Job.label`.                                |
-| `status`      | `"ok" \| "fail"`                | Estado terminal.                                 |
-| `error`       | `BaseException \| None`         | A exceção, se `status == "fail"`.                |
-| `duration_ms` | `int`                           | Duração em wall-clock do job.                    |
+| `label` | `str` | Ecoa `Job.label`. |
+| `status` | `"ok" \| "fail" \| "skipped"` | Estado terminal. `"skipped"` só é setado pelo `PipelineRunner` em jobs não alcançados. |
+| `error` | `BaseException \| None` | A exceção, se `status == "fail"`. |
+| `duration_ms` | `int` | Duração em wall-clock do job. |
 
 O runner nunca levanta em falha de job individual; quem chama decide como
 um job de background falho afeta o carimbo de foreground.
 
+#### Rollback (por-job, fan-out)
+
+`JobRunner.spawn` aceita um callback opcional `rollback` que dispara **só**
+quando o job falha — nunca em sucesso, nunca em cancelamento. O rollback
+recebe o `JobOutcome` que falhou. Se o próprio rollback levanta, o erro é
+logado e engolido — não pode mascarar a falha original nem quebrar o
+isolamento entre irmãos.
+
+```python
+from glory_to_protocol.jobs import Job, JobOutcome, JobRunner
+
+
+async def write_temp_file() -> None:
+    ...  # pode levantar
+
+
+async def remove_temp_file(outcome: JobOutcome) -> None:
+    ...  # compensação
+
+
+async with JobRunner() as runner:
+    runner.spawn(Job("stage temp file", write_temp_file), rollback=remove_temp_file)
+```
+
+#### Pipelines (sequencial, transacional)
+
+`PipelineRunner` é a contraparte sequencial do `JobRunner`. Jobs registrados
+via `spawn` executam em ordem na saída do contexto; a primeira falha aborta
+o pipeline, dispara rollback LIFO dos jobs já completados, marca os não
+alcançados como `"skipped"` e re-levanta como `PipelineFailed`.
+
+```python
+from glory_to_protocol.jobs import Job, JobOutcome, PipelineFailed, PipelineRunner
+
+
+async def reserve_quota() -> None: ...
+async def write_ledger() -> None: ...
+async def notify_director() -> None: ...
+
+async def release_quota(o: JobOutcome) -> None: ...
+async def revert_ledger(o: JobOutcome) -> None: ...
+
+try:
+    async with PipelineRunner() as p:
+        p.spawn(Job("reserve quota", reserve_quota), rollback=release_quota)
+        p.spawn(Job("write ledger", write_ledger), rollback=revert_ledger)
+        p.spawn(Job("notify director", notify_director))
+except PipelineFailed as exc:
+    print(exc.failed.label, exc.rolled_back, exc.rollback_errors)
+```
+
+Semântica:
+
+- **Ordem.** Jobs rodam na ordem em que foram `spawn`ados.
+- **Abort.** Na primeira falha, nenhum job subsequente roda; os handles
+  restantes viram `"skipped"`.
+- **Rollback LIFO.** Jobs completados com sucesso têm o rollback invocado em
+  ordem reversa. Erros de rollback são logados e coletados em
+  `PipelineFailed.rollback_errors`; a cadeia continua de qualquer jeito.
+- **Falha no primeiro job.** Nada pra desfazer — `rolled_back` vem vazio.
+- **Exceção no body.** Se o body do `async with` levanta antes da saída,
+  nenhum job roda e a exceção do body propaga sem alteração.
+
+`PipelineFailed` expõe `.failed` (o `JobOutcome` que falhou), `.rolled_back`
+(labels revertidos, ordem LIFO) e `.rollback_errors`
+(`list[tuple[str, BaseException]]`).
+
 ## ПОЛЕ № 4 · Status & Roteiro
 
-**Pre-alpha (0.1.0).** A superfície pública — `Form`, os quatro carimbos, `logo_large` / `logo_small`, `theme`, `configure()`, `Job` / `run_pending`, e `ProtocolTyper` / `make_app` — está estável o suficiente pra dirigir uma CLI real (78 testes, ~98% de cobertura), mas versões menores ainda podem renomear ou reestruturar coisas antes do 1.0.
+**Beta (0.1.1).** A superfície pública — `Form`, os quatro carimbos, `logo_large` / `logo_small`, `theme`, `configure()`, `Job` / `run_pending`, `JobRunner` + `PipelineRunner` (com rollback por job), e `ProtocolTyper` / `make_app` — está estável o suficiente pra dirigir uma CLI real (91 testes, ~98% de cobertura). Versões menores ainda podem refinar APIs antes do 1.0.
 
 Planejado:
 
-- Callbacks de jobs (hooks por job em conclusão / falha)
+- Hooks de sucesso por job (rollback já cobre o caso de falha)
 - Jobs longos (reporte de progresso, superfície de cancelamento)
 - Tracebacks melhores (tematizados, emoldurados dentro do form do bureau)
 - Autoria de componentes customizados (API pública de composição)

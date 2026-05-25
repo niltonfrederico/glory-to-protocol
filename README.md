@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD041 -->
+
 <p align="center">
   <a href="README.pt-br.md">
     <img src="https://img.shields.io/badge/leia%20em-portugu%C3%AAs-6fa86f?style=for-the-badge" alt="Leia em Português">
@@ -30,14 +31,14 @@ Built because useful tools and funny tools rarely overlap.
 
 ## ОГЛАВЛЕНИЕ · Index
 
-- [СВОДКА · TL;DR](#сводка--tldr)
-- [ОГЛАВЛЕНИЕ · Index](#оглавление--index)
-- [ПОЛЕ № 1 · Purpose](#поле--1--purpose)
-- [ПОЛЕ № 2 · Installation](#поле--2--installation)
+- [СВОДКА · TL;DR](#%D1%81%D0%B2%D0%BE%D0%B4%D0%BA%D0%B0--tldr)
+- [ОГЛАВЛЕНИЕ · Index](#%D0%BE%D0%B3%D0%BB%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5--index)
+- [ПОЛЕ № 1 · Purpose](#%D0%BF%D0%BE%D0%BB%D0%B5--1--purpose)
+- [ПОЛЕ № 2 · Installation](#%D0%BF%D0%BE%D0%BB%D0%B5--2--installation)
   - [pip](#pip)
   - [uv](#uv)
   - [poetry](#poetry)
-- [ПОЛЕ № 3 · Usage](#поле--3--usage)
+- [ПОЛЕ № 3 · Usage](#%D0%BF%D0%BE%D0%BB%D0%B5--3--usage)
   - [Configuration](#configuration)
   - [Typer CLI integration](#typer-cli-integration)
   - [Components](#components)
@@ -47,8 +48,8 @@ Built because useful tools and funny tools rarely overlap.
     - [Wrap](#wrap)
     - [Stamps](#stamps)
   - [Background jobs](#background-jobs)
-- [ПОЛЕ № 4 · Status & Roadmap](#поле--4--status--roadmap)
-- [ОТКАЗ · Disclaimer](#отказ--disclaimer)
+- [ПОЛЕ № 4 · Status & Roadmap](#%D0%BF%D0%BE%D0%BB%D0%B5--4--status--roadmap)
+- [ОТКАЗ · Disclaimer](#%D0%BE%D1%82%D0%BA%D0%B0%D0%B7--disclaimer)
 - [ВКЛАД · Contributing](CONTRIBUTING.md)
   - [Для граждан повышенного допуска · For citizens of elevated clearance](TRUE_CONTRIBUTING.md)
 - [КОДЕКС · Code of Conduct](CODE_OF_CONDUCT.md)
@@ -73,7 +74,7 @@ fact that it doubles as a perfectly serviceable TUI toolkit is a side effect.
 The aesthetic — Cyrillic accents, bureau titles, deadpan stamps — landed
 where it did because I'd been deep into Papers, Please at the time. The lib
 doesn't reuse a line of code or any asset from that game (see the
-[disclaimer](#отказ--disclaimer)), but the vibe is unmistakably from the
+[disclaimer](#%D0%BE%D1%82%D0%BA%D0%B0%D0%B7--disclaimer)), but the vibe is unmistakably from the
 same shelf.
 
 A note on the Russian: I speak some, and a few terms here are bent on
@@ -110,15 +111,15 @@ The library exposes a single `ProtocolSettings` singleton that holds every
 piece of bureau-level branding. Defaults render the NIRVYTEKH look out of the
 box; override them when wiring the lib into your own CLI.
 
-| Field                | Default                                                   | Effect                                                  |
+| Field | Default | Effect |
 | -------------------- | --------------------------------------------------------- | ------------------------------------------------------- |
-| `app_name`           | `"Protocol"`                                              | Generic application name (used as fallback).            |
-| `logo_text`          | `"Protocol"`                                              | Text rendered as the large ASCII logo (header).         |
-| `small_logo_text`    | `"Protocol"`                                              | Text rendered inside the small bordered logo (stamps).  |
-| `bureau_title`       | `"БЮРО NIRVYTEKH · Bureau of Computational Technology"`   | Subtitle line under the large logo in the header.       |
-| `director_name`      | `"Норман"`                                                | Director name shown in the header meta row.             |
-| `director_signature` | `"Подписано: Норман, Директор NIRVYTEKH"`                 | Signature line at the form footer.                      |
-| `ascii.allowed_alphabet` | uppercase A–Z, 0–9                                    | Characters allowed in `logo_text` / `small_logo_text`.  |
+| `app_name` | `"Protocol"` | Generic application name (used as fallback). |
+| `logo_text` | `"Protocol"` | Text rendered as the large ASCII logo (header). |
+| `small_logo_text` | `"Protocol"` | Text rendered inside the small bordered logo (stamps). |
+| `bureau_title` | `"БЮРО NIRVYTEKH · Bureau of Computational Technology"` | Subtitle line under the large logo in the header. |
+| `director_name` | `"Норман"` | Director name shown in the header meta row. |
+| `director_signature` | `"Подписано: Норман, Директор NIRVYTEKH"` | Signature line at the form footer. |
+| `ascii.allowed_alphabet` | uppercase A–Z, 0–9 | Characters allowed in `logo_text` / `small_logo_text`. |
 
 `logo_text` is validated against `ascii.allowed_alphabet` — passing characters
 outside the set raises `InvalidASCIICharactersError`.
@@ -195,12 +196,12 @@ with Form(title="version") as form:
 
 Constructor parameters:
 
-| Param            | Type             | Default | Purpose                                                  |
+| Param | Type | Default | Purpose |
 | ---------------- | ---------------- | ------- | -------------------------------------------------------- |
-| `title`          | `str`            | —       | Tab label on the top border (e.g., `"version"`).         |
-| `console`        | `Console \| None`| `None`  | Inject a Rich `Console`; auto-created if omitted.        |
-| `show_header`    | `bool`           | `True`  | Render the large logo + bureau title block at the top.   |
-| `signature_text` | `str \| None`    | `None`  | Override the footer signature; defaults to settings.     |
+| `title` | `str` | — | Tab label on the top border (e.g., `"version"`). |
+| `console` | `Console \| None`| `None` | Inject a Rich `Console`; auto-created if omitted. |
+| `show_header` | `bool` | `True` | Render the large logo + bureau title block at the top. |
+| `signature_text` | `str \| None` | `None` | Override the footer signature; defaults to settings. |
 
 Methods: `line(text, style=None, *, wrap=True)`, `divider()`, `stamp(...)`,
 `run_pending(jobs)`.
@@ -280,12 +281,12 @@ form.stamp(stamp_order("team 3 mobilization", "immediate execution"))
 form.stamp(stamp_review("monthly report", "awaiting Gensek review"))
 ```
 
-| Variant          | Label (RU/EN)               | Use for                                                |
+| Variant | Label (RU/EN) | Use for |
 | ---------------- | --------------------------- | ------------------------------------------------------ |
-| `stamp_approve`  | `ОДОБРЕНО / APPROVED`       | Request granted, action complete.                      |
-| `stamp_reject`   | `ОТКАЗАНО / REJECTED`       | Request denied; include `detail` with the reason.      |
-| `stamp_order`    | `ПРИКАЗ / DIRECT ORDER`     | Imperative — the bureau is dictating an action.        |
-| `stamp_review`   | `К СВЕДЕНИЮ / FOR REVIEW`   | Awaiting external decision (e.g., from the Gensek).    |
+| `stamp_approve` | `ОДОБРЕНО / APPROVED` | Request granted, action complete. |
+| `stamp_reject` | `ОТКАЗАНО / REJECTED` | Request denied; include `detail` with the reason. |
+| `stamp_order` | `ПРИКАЗ / DIRECT ORDER` | Imperative — the bureau is dictating an action. |
+| `stamp_review` | `К СВЕДЕНИЮ / FOR REVIEW` | Awaiting external decision (e.g., from the Gensek). |
 
 Signature: `stamp_<variant>(label: str, detail: str = "") -> Table`.
 
@@ -321,11 +322,11 @@ for outcome in outcomes:
 
 `Job` fields:
 
-| Field          | Type                              | Default | Purpose                                            |
+| Field | Type | Default | Purpose |
 | -------------- | --------------------------------- | ------- | -------------------------------------------------- |
-| `label`        | `str`                             | —       | Shown in the live ticker.                          |
-| `coro_factory` | `Callable[[], Awaitable[None]]`   | —       | Factory that returns the coroutine to await.       |
-| `critical`     | `bool`                            | `False` | Tag-only today; reserved for future fail-fast use. |
+| `label` | `str` | — | Shown in the live ticker. |
+| `coro_factory` | `Callable[[], Awaitable[None]]` | — | Factory that returns the coroutine to await. |
+| `critical` | `bool` | `False` | Tag-only today; reserved for future fail-fast use. |
 
 `coro_factory` is a **factory**, not a coroutine — passing the coroutine
 directly would bind it to the wrong event loop. Wrap with a `lambda` or a
@@ -334,23 +335,90 @@ spawn.
 
 Outcomes returned by `run_pending`:
 
-| Field         | Type                            | Meaning                                        |
+| Field | Type | Meaning |
 | ------------- | ------------------------------- | ---------------------------------------------- |
-| `label`       | `str`                           | Echoes `Job.label`.                            |
-| `status`      | `"ok" \| "fail"`                | Terminal state.                                |
-| `error`       | `BaseException \| None`         | The exception, if `status == "fail"`.          |
-| `duration_ms` | `int`                           | Wall-clock duration of the job.                |
+| `label` | `str` | Echoes `Job.label`. |
+| `status` | `"ok" \| "fail" \| "skipped"` | Terminal state. `"skipped"` only set by `PipelineRunner` for unreached jobs. |
+| `error` | `BaseException \| None` | The exception, if `status == "fail"`. |
+| `duration_ms` | `int` | Wall-clock duration of the job. |
 
 The runner never raises on individual job failure; the caller decides how a
 failed background job affects the foreground stamp.
 
+#### Rollback (per-job, fan-out)
+
+`JobRunner.spawn` accepts an optional `rollback` callback that fires **only**
+when the job fails — never on success, never on cancellation. The rollback
+receives the failed `JobOutcome`. If the rollback itself raises, the error is
+logged and swallowed so it cannot mask the original failure or break sibling
+isolation.
+
+```python
+from glory_to_protocol.jobs import Job, JobOutcome, JobRunner
+
+
+async def write_temp_file() -> None:
+    ...  # may raise
+
+
+async def remove_temp_file(outcome: JobOutcome) -> None:
+    ...  # compensation
+
+
+async with JobRunner() as runner:
+    runner.spawn(Job("stage temp file", write_temp_file), rollback=remove_temp_file)
+```
+
+#### Pipelines (sequential, transactional)
+
+`PipelineRunner` is the sequential counterpart to `JobRunner`. Jobs registered
+with `spawn` execute in order on context exit; the first failure aborts the
+pipeline, triggers LIFO rollback of previously-completed jobs, marks the
+unreached jobs as `"skipped"`, and re-raises as `PipelineFailed`.
+
+```python
+from glory_to_protocol.jobs import Job, JobOutcome, PipelineFailed, PipelineRunner
+
+
+async def reserve_quota() -> None: ...
+async def write_ledger() -> None: ...
+async def notify_director() -> None: ...
+
+async def release_quota(o: JobOutcome) -> None: ...
+async def revert_ledger(o: JobOutcome) -> None: ...
+
+try:
+    async with PipelineRunner() as p:
+        p.spawn(Job("reserve quota", reserve_quota), rollback=release_quota)
+        p.spawn(Job("write ledger", write_ledger), rollback=revert_ledger)
+        p.spawn(Job("notify director", notify_director))
+except PipelineFailed as exc:
+    print(exc.failed.label, exc.rolled_back, exc.rollback_errors)
+```
+
+Semantics:
+
+- **Order.** Jobs run in the order they were `spawn`ed.
+- **Abort.** On first failure, no subsequent job runs; remaining handles
+  flip to `"skipped"`.
+- **LIFO rollback.** Successfully-completed jobs have their rollback invoked
+  in reverse order. Rollback errors are logged and collected in
+  `PipelineFailed.rollback_errors`; the chain continues regardless.
+- **First-job failure.** Nothing to undo — `rolled_back` is empty.
+- **Body exception.** If the `async with` body raises before exit, no job
+  runs and the body's exception propagates unchanged.
+
+`PipelineFailed` exposes `.failed` (the failed `JobOutcome`), `.rolled_back`
+(labels rolled back, LIFO order), and `.rollback_errors`
+(`list[tuple[str, BaseException]]`).
+
 ## ПОЛЕ № 4 · Status & Roadmap
 
-**Pre-alpha (0.1.0).** The public surface — `Form`, the four stamps, `logo_large` / `logo_small`, `theme`, `configure()`, `Job` / `run_pending`, and `ProtocolTyper` / `make_app` — is stable enough to drive a real CLI (78 tests, ~98% coverage), but minor versions may still rename or restructure things before 1.0.
+**Beta (0.1.1).** The public surface — `Form`, the four stamps, `logo_large` / `logo_small`, `theme`, `configure()`, `Job` / `run_pending`, `JobRunner` + `PipelineRunner` (with per-job rollback), and `ProtocolTyper` / `make_app` — is stable enough to drive a real CLI (91 tests, ~98% coverage). Minor versions may still refine APIs before 1.0.
 
 Planned:
 
-- Job callbacks (per-job hooks on completion / failure)
+- Per-job on-success hooks (rollback already covers on-failure)
 - Long-running jobs (progress reporting, cancellation surface)
 - Better tracebacks (themed, framed inside the bureau form)
 - Custom component authoring (public composition API)
