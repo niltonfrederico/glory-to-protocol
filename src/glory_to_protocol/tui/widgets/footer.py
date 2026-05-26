@@ -19,7 +19,7 @@ class BindingsFooter(Static):
     def __init__(self, theme: BureauTheme, bindings: list[tuple[str, str]]) -> None:
         self._theme = theme
         self._binding_specs = bindings
-        super().__init__(self._render_text())
+        super().__init__(self._render_text(), markup=False)
 
     def _render_text(self) -> str:
         labels = self._theme.footer_labels

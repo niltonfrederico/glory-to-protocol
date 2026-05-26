@@ -12,7 +12,7 @@ def test_should_default_to_nirvytekh_when_no_overrides():
     assert theme.logo_text == "NIRVYTEKH"
     assert theme.accent == "#c0392b"
     assert theme.gold == "#d4af37"
-    assert theme.bg == "#16181d"
+    assert theme.bg == "#000000"
     assert theme.directive_prefix == "ДИРЕКТИВА №"
 
 

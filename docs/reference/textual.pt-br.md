@@ -67,7 +67,7 @@ Pydantic model frozen com a superfície de identidade. Todo campo tem env overri
 | `logo_text` | `str` | `"NIRVYTEKH"` | Texto renderizado como logo ASCII |
 | `accent` | `str` | `"#c0392b"` | Borda + accent (vermelho) |
 | `gold` | `str` | `"#d4af37"` | Logo + ênfase |
-| `bg` | `str` | `"#16181d"` | Background |
+| `bg` | `str` | `"#000000"` | Background |
 | `border` | `str` | `"#7a7a7a"` | Inputs + divisores |
 | `muted` | `str` | `"#6c7a89"` | Texto secundário |
 | `text_color` | `str` | `"#e6e6e6"` | Texto default |
@@ -114,7 +114,7 @@ superfície ao vivo combinarem:
 
 | Variável | Hex | Origem |
 | --- | --- | --- |
-| `$bg` | `#16181d` | Bg do header |
+| `$bg` | `#000000` | Background |
 | `$accent` | `#c0392b` | Stamp + título vermelho |
 | `$gold` | `#d4af37` | Logo |
 | `$border` | `#7a7a7a` | Linha do frame |

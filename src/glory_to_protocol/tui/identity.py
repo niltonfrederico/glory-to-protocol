@@ -33,7 +33,7 @@ class BureauTheme(BaseModel):
     logo_text: str = Field("NIRVYTEKH")
     accent: str = Field("#c0392b")
     gold: str = Field("#d4af37")
-    bg: str = Field("#16181d")
+    bg: str = Field("#000000")
     border: str = Field("#7a7a7a")
     muted: str = Field("#6c7a89")
     text_color: str = Field("#e6e6e6")
