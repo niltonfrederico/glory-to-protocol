@@ -5,7 +5,7 @@ from textual.containers import Vertical
 
 DIRECTIVE_PROMPT = "Search directives…"
 DIRECTIVE_TITLE = "Directive search"
-DIRECTIVE_SUBTITLE = "[ENTER] open  ·  [ESC] cancel"
+DIRECTIVE_SUBTITLE = r"\[ENTER] open  ·  \[ESC] cancel"
 
 
 class ProtocolCommandPalette(CommandPalette):
