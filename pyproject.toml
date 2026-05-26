@@ -1,6 +1,6 @@
 [project]
 name = "glory-to-protocol"
-version = "0.2.0"
+version = "0.3.0"
 description = "Deadpan state-bureau TUI library for Typer CLIs — framed forms, decision stamps, themed help, ASCII header, live jobs ticker."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -53,6 +53,7 @@ Changelog = "https://github.com/niltonfrederico/glory-to-protocol/releases"
 
 [project.scripts]
 protocol-showcase = "examples.showcase:app"
+protocol = "examples.showcase:main"
 
 [build-system]
 requires = ["hatchling"]
@@ -120,7 +121,7 @@ force-single-line = true
 quote-style = "double"
 
 [tool.bumpversion]
-current_version = "0.2.0"
+current_version = "0.3.0"
 allow_dirty = false
 commit = true
 tag = true

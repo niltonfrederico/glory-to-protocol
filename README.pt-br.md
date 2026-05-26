@@ -26,6 +26,7 @@ carimbos de decisão (`approve` / `reject` / `order` / `review`), `--help`
 tematizado, header com logo ASCII e um ticker ao vivo de jobs em
 background. Construída porque ferramentas úteis e ferramentas divertidas
 raramente se cruzam.
+Hoje vem com o caminho Rich-only; o setting `mode` boota um shell Textual quando o extra opcional `[tui]` chegar em 0.4.0.
 
 <p align="center">
   <img src="assets/gifs/showcase.gif" alt="protocol-showcase — todos os componentes TUI renderizados" width="900">
@@ -174,6 +175,30 @@ app = make_app()
 def status() -> None:
     with Form(title="status") as form:
         form.line("All systems nominal.")
+```
+
+### Caminho Rich de fallback
+
+Quando `mode` é `tui` ou `hybrid`, o dispatcher tenta primeiro o
+shell Textual. Se o terminal não for um TTY, se o Textual não
+estiver instalado, ou se o terminal estiver abaixo do viewport
+mínimo, o dispatcher cai num palette numerado renderizado por Rich
+mais uma sequência de prompts `rich.prompt`. Essa é a superfície
+interativa completa da 0.3.0; o shell Textual chega em 0.4.0 com o
+extra `[tui]`. Use `settings.fallback="error"` se quiser que o
+dispatcher recuse o fallback e levante exceção.
+
+```python
+from glory_to_protocol import Protocol, ProtocolSettings, Mode, expose
+import typer
+
+app = typer.Typer()
+
+@app.command()
+@expose(section="data")
+def ingest(path: str): ...
+
+Protocol(typer_app=app, settings=ProtocolSettings(mode=Mode.HYBRID)).run()
 ```
 
 Pontos de referência em [examples/showcase.py](examples/showcase.py):

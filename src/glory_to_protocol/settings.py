@@ -9,6 +9,7 @@ from pydantic import model_validator
 from pydantic_settings import BaseSettings
 from pydantic_settings import SettingsConfigDict
 
+from glory_to_protocol.strings import Strings
 from glory_to_protocol.tui import _ascii
 from glory_to_protocol.tui.exceptions import InvalidASCIICharactersError
 
@@ -38,6 +39,17 @@ class ASCIISettings(BaseModel):
         return self.allowed_alphabet | self.allowed_symbols | self.allowed_misc
 
 
+class PaletteSettings(BaseModel):
+    shortcut: str = Field("ctrl+k")
+    placeholder: str = Field("Type a command…")
+
+
+class ViewportSettings(BaseModel):
+    min_width: int = Field(80, ge=20)
+    min_height: int = Field(24, ge=10)
+    require_fullscreen: bool = Field(False)
+
+
 class ProtocolSettings(BaseSettings):
     app_name: str = Field(_DEFAULT_APP_NAME)
     logo_text: str = Field(_DEFAULT_APP_NAME)
@@ -52,7 +64,14 @@ class ProtocolSettings(BaseSettings):
     mode: Mode = Field(Mode.HYBRID)
     fallback: Fallback = Field(Fallback.RICH)
 
-    model_config = SettingsConfigDict(env_prefix="PROTOCOL_")
+    palette: PaletteSettings = PaletteSettings()
+    viewport: ViewportSettings = ViewportSettings()
+    strings: Strings = Strings()
+
+    model_config = SettingsConfigDict(
+        env_prefix="PROTOCOL_",
+        env_nested_delimiter="__",
+    )
 
     @model_validator(mode="after")
     def validate_logo_text_characters(self) -> Self:

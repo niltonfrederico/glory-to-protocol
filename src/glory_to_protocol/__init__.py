@@ -2,10 +2,17 @@ from importlib import import_module
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from glory_to_protocol.protocol import Protocol
+    from glory_to_protocol.protocol import ProtocolUnavailable
+    from glory_to_protocol.registry import ExposedCommand
+    from glory_to_protocol.registry import expose
+    from glory_to_protocol.settings import Fallback
+    from glory_to_protocol.settings import Mode
     from glory_to_protocol.settings import ProtocolSettings
     from glory_to_protocol.settings import configure
     from glory_to_protocol.settings import get_settings
     from glory_to_protocol.settings import reset_settings
+    from glory_to_protocol.strings import Strings
     from glory_to_protocol.tui import Form
     from glory_to_protocol.tui import render_header
     from glory_to_protocol.tui import stamp_approve
@@ -21,14 +28,21 @@ if TYPE_CHECKING:
     from glory_to_protocol.typer import make_app
 
 __all__ = [
+    "ExposedCommand",
+    "Fallback",
+    "Form",
     "LOGO_LARGE",
     "LOGO_SMALL",
-    "Form",
+    "Mode",
+    "Protocol",
     "ProtocolSettings",
     "ProtocolTyper",
     "ProtocolTyperCommand",
     "ProtocolTyperGroup",
+    "ProtocolUnavailable",
+    "Strings",
     "configure",
+    "expose",
     "get_settings",
     "logo_large",
     "logo_small",
@@ -43,14 +57,21 @@ __all__ = [
 ]
 
 _LAZY_MAP: dict[str, tuple[str, str]] = {
+    "ExposedCommand": ("glory_to_protocol.registry", "ExposedCommand"),
+    "Fallback": ("glory_to_protocol.settings", "Fallback"),
     "Form": ("glory_to_protocol.tui", "Form"),
     "LOGO_LARGE": ("glory_to_protocol.tui.logo", "LOGO_LARGE"),
     "LOGO_SMALL": ("glory_to_protocol.tui.logo", "LOGO_SMALL"),
+    "Mode": ("glory_to_protocol.settings", "Mode"),
+    "Protocol": ("glory_to_protocol.protocol", "Protocol"),
     "ProtocolSettings": ("glory_to_protocol.settings", "ProtocolSettings"),
     "ProtocolTyper": ("glory_to_protocol.typer", "ProtocolTyper"),
     "ProtocolTyperCommand": ("glory_to_protocol.typer", "ProtocolTyperCommand"),
     "ProtocolTyperGroup": ("glory_to_protocol.typer", "ProtocolTyperGroup"),
+    "ProtocolUnavailable": ("glory_to_protocol.protocol", "ProtocolUnavailable"),
+    "Strings": ("glory_to_protocol.strings", "Strings"),
     "configure": ("glory_to_protocol.settings", "configure"),
+    "expose": ("glory_to_protocol.registry", "expose"),
     "get_settings": ("glory_to_protocol.settings", "get_settings"),
     "logo_large": ("glory_to_protocol.tui.logo", "logo_large"),
     "logo_small": ("glory_to_protocol.tui.logo", "logo_small"),

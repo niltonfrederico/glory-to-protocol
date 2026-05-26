@@ -24,6 +24,7 @@ wraps your commands in a deadpan, state-bureau aesthetic — framed forms,
 four decision stamps (`approve` / `reject` / `order` / `review`), themed
 `--help`, an ASCII logo header, and a live ticker for background jobs.
 Built because useful tools and funny tools rarely overlap.
+Ships with a Rich-only path today and a `mode` setting that will boot a Textual shell once the optional `[tui]` extra lands in 0.4.0.
 
 <p align="center">
   <img src="assets/gifs/showcase.gif" alt="protocol-showcase — all TUI components rendered" width="900">
@@ -167,6 +168,30 @@ app = make_app()
 def status() -> None:
     with Form(title="status") as form:
         form.line("All systems nominal.")
+```
+
+### Fallback Rich path
+
+When `mode` is `tui` or `hybrid`, the dispatcher first tries the
+Textual shell. If the terminal is not a TTY, Textual is not
+installed, or the terminal is below the minimum viewport, the
+dispatcher falls back to a Rich-rendered numbered palette plus a
+`rich.prompt` form sequence. This is the entire interactive surface
+in 0.3.0; the Textual shell lands in 0.4.0 alongside the `[tui]`
+extra. Set `settings.fallback="error"` if you want the dispatcher to
+refuse the fallback and raise instead.
+
+```python
+from glory_to_protocol import Protocol, ProtocolSettings, Mode, expose
+import typer
+
+app = typer.Typer()
+
+@app.command()
+@expose(section="data")
+def ingest(path: str): ...
+
+Protocol(typer_app=app, settings=ProtocolSettings(mode=Mode.HYBRID)).run()
 ```
 
 Reference points in [examples/showcase.py](examples/showcase.py):

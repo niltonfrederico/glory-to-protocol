@@ -78,3 +78,86 @@ def test_should_raise_when_mode_value_not_literal():
 
     with pytest.raises(pydantic.ValidationError):
         ProtocolSettings.model_validate({"mode": "invalid"})
+
+
+def test_should_default_palette_shortcut_to_ctrl_k_when_unset():
+    settings = ProtocolSettings()
+    assert settings.palette.shortcut == "ctrl+k"
+
+
+def test_should_default_viewport_to_80_by_24_when_unset():
+    settings = ProtocolSettings()
+    assert settings.viewport.min_width == 80
+    assert settings.viewport.min_height == 24
+
+
+def test_should_disable_require_fullscreen_by_default():
+    settings = ProtocolSettings()
+    assert settings.viewport.require_fullscreen is False
+
+
+def test_should_load_nested_palette_shortcut_from_env(monkeypatch):
+    monkeypatch.setenv("PROTOCOL_PALETTE__SHORTCUT", "ctrl+l")
+    settings = ProtocolSettings()
+    assert settings.palette.shortcut == "ctrl+l"
+
+
+def test_should_default_strings_to_catalog_when_unset():
+    from glory_to_protocol.strings import Strings
+
+    settings = ProtocolSettings()
+    assert isinstance(settings.strings, Strings)
+    assert settings.strings.stamps.approved == "ОДОБРЕНО"
+
+
+def test_should_override_strings_when_explicit_catalog_passed():
+    from glory_to_protocol.strings import StampStrings
+    from glory_to_protocol.strings import Strings
+
+    overridden = Strings(stamps=StampStrings(approved="APROVADO"))
+    settings = ProtocolSettings(strings=overridden)
+    assert settings.strings.stamps.approved == "APROVADO"
+
+
+def test_should_load_nested_strings_from_env(monkeypatch):
+    monkeypatch.setenv("PROTOCOL_STRINGS__PALETTE__TITLE", "COMANDOS")
+    settings = ProtocolSettings()
+    assert settings.strings.palette.title == "COMANDOS"
+
+
+def test_should_apply_mode_override_when_configure_called():
+    from glory_to_protocol.settings import Mode
+    from glory_to_protocol.settings import configure
+    from glory_to_protocol.settings import reset_settings
+
+    reset_settings()
+    configured = configure(mode=Mode.TUI)
+    assert configured.mode is Mode.TUI
+    reset_settings()
+
+
+def test_should_apply_nested_strings_override_when_configure_called():
+    from glory_to_protocol.settings import configure
+    from glory_to_protocol.settings import reset_settings
+    from glory_to_protocol.strings import StampStrings
+    from glory_to_protocol.strings import Strings
+
+    reset_settings()
+    configured = configure(
+        strings=Strings(stamps=StampStrings(approved="APROVADO")),
+    )
+    assert configured.strings.stamps.approved == "APROVADO"
+    reset_settings()
+
+
+def test_should_preserve_other_fields_when_configure_overrides_one():
+    from glory_to_protocol.settings import Fallback
+    from glory_to_protocol.settings import Mode
+    from glory_to_protocol.settings import configure
+    from glory_to_protocol.settings import reset_settings
+
+    reset_settings()
+    configured = configure(mode=Mode.TUI)
+    assert configured.mode is Mode.TUI
+    assert configured.fallback is Fallback.RICH
+    reset_settings()
