@@ -1,3 +1,4 @@
+from enum import StrEnum
 from typing import Any
 from typing import Self
 
@@ -12,6 +13,17 @@ from glory_to_protocol.tui import _ascii
 from glory_to_protocol.tui.exceptions import InvalidASCIICharactersError
 
 _DEFAULT_APP_NAME = "Protocol"
+
+
+class Mode(StrEnum):
+    TUI = "tui"
+    CLI = "cli"
+    HYBRID = "hybrid"
+
+
+class Fallback(StrEnum):
+    RICH = "rich"
+    ERROR = "error"
 
 
 class ASCIISettings(BaseModel):
@@ -36,6 +48,9 @@ class ProtocolSettings(BaseSettings):
     director_signature: str = Field("Подписано: Норман, Директор NIRVYTEKH")
 
     ascii: ASCIISettings = ASCIISettings()
+
+    mode: Mode = Field(Mode.HYBRID)
+    fallback: Fallback = Field(Fallback.RICH)
 
     model_config = SettingsConfigDict(env_prefix="PROTOCOL_")
 

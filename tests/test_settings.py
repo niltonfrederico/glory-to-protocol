@@ -55,3 +55,26 @@ def test_should_clear_singleton_when_reset_settings_called() -> None:
     configure(app_name="MyBureau")
     reset_settings()
     assert get_settings().app_name == "Protocol"
+
+
+def test_should_default_mode_to_hybrid_when_unset():
+    settings = ProtocolSettings()
+    assert settings.mode == "hybrid"
+
+
+def test_should_default_fallback_to_rich_when_unset():
+    settings = ProtocolSettings()
+    assert settings.fallback == "rich"
+
+
+def test_should_load_mode_from_env_when_protocol_mode_set(monkeypatch):
+    monkeypatch.setenv("PROTOCOL_MODE", "cli")
+    settings = ProtocolSettings()
+    assert settings.mode == "cli"
+
+
+def test_should_raise_when_mode_value_not_literal():
+    import pydantic
+
+    with pytest.raises(pydantic.ValidationError):
+        ProtocolSettings.model_validate({"mode": "invalid"})
