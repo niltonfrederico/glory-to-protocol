@@ -17,13 +17,13 @@ def _build_protocol() -> Protocol:
         pass
 
     @typer_app.command()
-    @expose(section="data", icon="◈")
+    @expose(section="data", icon="*")
     def ingest(path: str) -> None:
         """Pull data into the warehouse."""
         typer.echo(f"ingest:{path}")
 
     @typer_app.command()
-    @expose(section="reports", icon="⌛")
+    @expose(section="reports", icon="~")
     def daily(when: str) -> None:
         """Compile daily report."""
         typer.echo(f"daily:{when}")

@@ -67,7 +67,7 @@ through `PROTOCOL_LAYOUT__BUREAU__<FIELD>`.
 | `logo_text` | `str` | `"NIRVYTEKH"` | Text rendered as ASCII logo |
 | `accent` | `str` | `"#c0392b"` | Border + accent color (red) |
 | `gold` | `str` | `"#d4af37"` | Logo + emphasis color |
-| `bg` | `str` | `"#16181d"` | Background |
+| `bg` | `str` | `"#000000"` | Background |
 | `border` | `str` | `"#7a7a7a"` | Inputs + dividers |
 | `muted` | `str` | `"#6c7a89"` | Secondary text |
 | `text_color` | `str` | `"#e6e6e6"` | Default body text |
@@ -114,7 +114,7 @@ documents and the live surface match:
 
 | Variable | Hex | Source |
 | --- | --- | --- |
-| `$bg` | `#16181d` | Header bg |
+| `$bg` | `#000000` | Background |
 | `$accent` | `#c0392b` | Stamp + title red |
 | `$gold` | `#d4af37` | Logo |
 | `$border` | `#7a7a7a` | Frame line |

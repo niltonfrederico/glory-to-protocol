@@ -14,6 +14,8 @@ from glory_to_protocol.tui.screens.form import FormScreen
 from glory_to_protocol.tui.screens.help import HelpOverlay
 from glory_to_protocol.tui.screens.palette import PaletteScreen
 from glory_to_protocol.tui.screens.result import render_result_stamp
+from glory_to_protocol.tui.widgets.command_palette import DIRECTIVE_TITLE
+from glory_to_protocol.tui.widgets.command_palette import ProtocolCommandPalette
 
 
 def _build_protocol(layout: LayoutSettings | None = None) -> Protocol:
@@ -107,6 +109,57 @@ async def test_should_open_form_when_provider_hit_invoked():
         hits[0].command()
         await pilot.pause()
         assert len(app.query(FormScreen)) == 1
+
+
+async def test_should_yield_discovery_hits_when_provider_discover_called():
+    protocol = _build_protocol()
+    app = ProtocolApp(protocol)
+    async with app.run_test(size=(120, 40)) as pilot:
+        await pilot.pause()
+        provider = ExposedCommandProvider(app.screen)
+        hits = [hit async for hit in provider.discover()]
+        assert len(hits) == len(protocol.exposed)
+        assert all(hit.command is not None for hit in hits)
+
+
+async def test_should_open_form_when_discovery_hit_invoked():
+    protocol = _build_protocol()
+    app = ProtocolApp(protocol)
+    async with app.run_test(size=(120, 40)) as pilot:
+        await pilot.pause()
+        provider = ExposedCommandProvider(app.screen)
+        hits = [hit async for hit in provider.discover()]
+        assert hits
+        hits[0].command()
+        await pilot.pause()
+        assert len(app.query(FormScreen)) == 1
+
+
+async def test_should_open_protocol_command_palette_when_action_invoked():
+    protocol = _build_protocol()
+    app = ProtocolApp(protocol)
+    async with app.run_test(size=(120, 40)) as pilot:
+        await pilot.pause()
+        await app.run_action("command_palette")
+        await pilot.pause()
+        assert isinstance(app.screen, ProtocolCommandPalette)
+        container = app.screen.query_one("#--container")
+        assert container.border_title == DIRECTIVE_TITLE
+        subtitle = container.border_subtitle or ""
+        assert "[ENTER]" in subtitle
+        assert "[ESC]" in subtitle
+
+
+async def test_should_emit_quit_hint_when_help_quit_action_invoked():
+    protocol = _build_protocol()
+    app = ProtocolApp(protocol)
+    async with app.run_test(size=(120, 40)) as pilot:
+        await pilot.pause()
+        await app.run_action("help_quit")
+        await pilot.pause()
+        notifications = list(app._notifications)
+        assert any("quit" in n.message.lower() for n in notifications)
+        assert any(n.title == "Quit?" for n in notifications)
 
 
 async def test_should_swap_to_form_when_provider_activates_command():

@@ -9,6 +9,7 @@ from textual.widgets import Input
 
 from glory_to_protocol.registry import ExposedCommand
 from glory_to_protocol.registry import palette_entries
+from glory_to_protocol.tui._branding import body_subtitle
 
 
 class PaletteScreen(Vertical):
@@ -22,21 +23,41 @@ class PaletteScreen(Vertical):
     BINDINGS = [
         Binding("j", "cursor_down", "down", show=False),
         Binding("k", "cursor_up", "up", show=False),
-        Binding("slash", "focus_filter", "filter", show=False),
+        Binding("slash", "focus_filter", "filter", show=True),
     ]
 
     DEFAULT_CSS = """
     PaletteScreen {
+        width: 100%;
+        height: 1fr;
+        background: $bg;
         align: center top;
+        padding: 0;
     }
     PaletteScreen #filter {
-        width: 1fr;
-        border: tall $border;
-        margin: 0 0 1 0;
+        width: 60;
+        max-width: 80%;
+        height: 1;
+        border: none;
+        background: $bg;
+        color: $text-color;
+        padding: 0 1;
+        margin: 0;
     }
     PaletteScreen DataTable {
         height: 1fr;
         border: heavy $accent;
+        border-subtitle-color: $gold;
+        background: $bg;
+        margin-top: 0;
+    }
+    PaletteScreen DataTable > .datatable--header {
+        background: $bg;
+        color: $gold;
+        text-style: bold;
+    }
+    PaletteScreen DataTable > .datatable--odd-row,
+    PaletteScreen DataTable > .datatable--even-row {
         background: $bg;
     }
     """
@@ -52,12 +73,13 @@ class PaletteScreen(Vertical):
         self._filter = ""
 
     def compose(self) -> ComposeResult:
-        yield Input(placeholder="Filter…", id="filter")
+        yield Input(placeholder="Filter… (press / to focus)", id="filter")
         yield DataTable(zebra_stripes=True, cursor_type="row", id="commands")
 
     def on_mount(self) -> None:
         table = self.query_one(DataTable)
         table.add_columns("Icon", "Command", "Section", "Description")
+        table.border_subtitle = body_subtitle()
         self._populate(table)
         table.focus()
 

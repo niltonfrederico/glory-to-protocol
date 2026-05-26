@@ -31,7 +31,7 @@ def _build_protocol() -> Protocol:
         pass
 
     @typer_app.command()
-    @expose(section="data", icon="◈")
+    @expose(section="data", icon="*")
     def ingest(
         path: str,
         retries: Annotated[int, typer.Option(help="How many retries to attempt.")] = 3,

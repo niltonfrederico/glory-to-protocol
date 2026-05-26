@@ -18,6 +18,7 @@ from textual.widgets import Static
 from textual.widgets._input import InputType
 
 from glory_to_protocol.registry import ExposedCommand
+from glory_to_protocol.tui._branding import body_subtitle
 from glory_to_protocol.tui._schema import FormField
 from glory_to_protocol.tui._schema import fields_from_typer
 
@@ -65,9 +66,15 @@ class FormScreen(Vertical):
 
     DEFAULT_CSS = """
     FormScreen {
+        width: 100%;
+        height: 1fr;
         border: heavy $accent;
+        border-subtitle-color: $gold;
         background: $bg;
         padding: 1 2;
+    }
+    FormScreen #form-body {
+        height: 1fr;
     }
     FormScreen .field-label {
         color: $gold;
@@ -98,6 +105,7 @@ class FormScreen(Vertical):
         super().__init__()
         self._command = command
         self._fields = fields_from_typer(click_command)
+        self.border_subtitle = body_subtitle()
 
     def compose(self) -> ComposeResult:
         yield Static(self._command.label, classes="field-label")

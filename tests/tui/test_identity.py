@@ -10,9 +10,9 @@ def test_should_default_to_nirvytekh_when_no_overrides():
     theme = BureauTheme()
     assert theme.name == "NIRVYTEKH"
     assert theme.logo_text == "NIRVYTEKH"
-    assert theme.accent == "#c0392b"
-    assert theme.gold == "#d4af37"
-    assert theme.bg == "#16181d"
+    assert theme.accent == "#ffd84d"
+    assert theme.gold == "#ffe066"
+    assert theme.bg == "#0e0a05"
     assert theme.directive_prefix == "ДИРЕКТИВА №"
 
 
@@ -28,7 +28,7 @@ def test_should_accept_overrides_when_kwargs_passed():
     theme = BureauTheme(name="PROTON", accent="#00ffea")
     assert theme.name == "PROTON"
     assert theme.accent == "#00ffea"
-    assert theme.gold == "#d4af37"
+    assert theme.gold == "#ffe066"
 
 
 def test_should_reject_mutation_when_frozen():
