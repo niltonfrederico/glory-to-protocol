@@ -11,6 +11,7 @@ from glory_to_protocol.tui.providers import ExposedCommandProvider
 from glory_to_protocol.tui.screens.form import FormScreen
 from glory_to_protocol.tui.screens.help import HelpOverlay
 from glory_to_protocol.tui.screens.palette import PaletteScreen
+from glory_to_protocol.tui.widgets.command_palette import ProtocolCommandPalette
 from glory_to_protocol.tui.widgets.footer import BindingsFooter
 from glory_to_protocol.tui.widgets.header import OfficialHeader
 
@@ -37,7 +38,7 @@ class ProtocolApp(App[tuple]):
     Textual event loop.
     """
 
-    COMMANDS = App.COMMANDS | {ExposedCommandProvider}
+    COMMANDS = {ExposedCommandProvider}
 
     BINDINGS = [
         Binding("question_mark", "open_help", "help", show=False),
@@ -121,3 +122,8 @@ class ProtocolApp(App[tuple]):
     def action_open_help(self) -> None:
         layout = self.protocol.settings.layout
         self.push_screen(HelpOverlay(layout.bureau, dict(layout.keybinds)))
+
+    def action_command_palette(self) -> None:
+        already_open = self.screen.has_class("--textual-command-palette")
+        if self.use_command_palette and not already_open:
+            self.push_screen(ProtocolCommandPalette())
