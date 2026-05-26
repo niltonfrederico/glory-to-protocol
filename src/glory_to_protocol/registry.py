@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import inspect
 from collections.abc import Callable
 from collections.abc import Iterable
 from dataclasses import dataclass
+from dataclasses import replace
 from typing import Any
-from typing import Protocol
+from typing import Protocol as _TypingProtocol
 from typing import TypeVar
 from typing import runtime_checkable
 
@@ -12,7 +14,7 @@ import typer
 
 
 @runtime_checkable
-class _Named(Protocol):
+class _Named(_TypingProtocol):
     __name__: str
     __doc__: str | None
 
@@ -46,10 +48,8 @@ def _humanize(name: str) -> str:
 
 
 def _first_doc_line(func: _Named) -> str:
-    doc = (func.__doc__ or "").strip()
-    if not doc:
-        return ""
-    return doc.splitlines()[0]
+    doc = inspect.getdoc(func) or ""
+    return doc.splitlines()[0] if doc else ""
 
 
 def expose(
@@ -99,6 +99,9 @@ def discover_exposed(app: typer.Typer) -> list[ExposedCommand]:
         info = getattr(callback, EXPOSE_ATTR, None)
         if info is None:
             continue
+        resolved_name = command_info.name or info.typer_name
+        if resolved_name != info.typer_name:
+            info = replace(info, typer_name=resolved_name)
         exposed.append(info)
     _validate_shortcuts(exposed)
     return exposed

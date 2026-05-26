@@ -1,5 +1,3 @@
-docs/
-
 # Per-session list of files Claude touched; consumed by Stop hook.
 .claude/.touched-files
 

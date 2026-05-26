@@ -92,7 +92,7 @@ def get_settings() -> ProtocolSettings:
 
 
 def _invalidate_derived_caches() -> None:
-    # Late import: logo depends on this module.
+    # Late import: tui.logo imports settings, so importing at module top loops.
     from glory_to_protocol.tui.logo import logo_large
     from glory_to_protocol.tui.logo import logo_small
 

@@ -10,20 +10,12 @@ from rich.prompt import IntPrompt
 from rich.prompt import Prompt
 
 from glory_to_protocol.registry import ExposedCommand
-from glory_to_protocol.settings import ProtocolSettings
-from glory_to_protocol.settings import get_settings
 from glory_to_protocol.tui._schema import FormField
 from glory_to_protocol.tui.header import render_header
 
 
-def render_header_oneshot(
-    *,
-    console: Console | None = None,
-    settings: ProtocolSettings | None = None,
-) -> None:
+def render_header_oneshot(*, console: Console | None = None) -> None:
     """Print the bureau header once. Reuses the existing Rich renderable."""
-    _settings = settings or get_settings()
-    _ = _settings  # currently unused; future overrides may consume it
     active_console = console or Console(highlight=False, soft_wrap=False)
     active_console.print(render_header())
 

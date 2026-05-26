@@ -4,6 +4,7 @@ import importlib.util
 import os
 import sys
 from dataclasses import dataclass
+from functools import cached_property
 from typing import TextIO
 
 import click
@@ -56,7 +57,7 @@ class Protocol:
         self.settings = settings or ProtocolSettings()
         self.exposed: list[ExposedCommand] = discover_exposed(typer_app)
 
-    @property
+    @cached_property
     def cli(self) -> click.Command:
         """The underlying click command tree."""
         return typer.main.get_command(self.typer_app)
@@ -81,9 +82,6 @@ class Protocol:
 
         report = self._capability_check()
         if report.ok:
-            # Etapa 3 (next release) wires Textual here. For 0.3.0 we treat a
-            # successful capability check as "textual not implemented yet" so the
-            # fallback path takes over.
             report = CapabilityReport(False, "textual surface not implemented yet")
 
         if self.settings.fallback is Fallback.ERROR:
@@ -106,7 +104,7 @@ class Protocol:
         if not self.exposed:
             raise ProtocolUnavailable("no exposed commands available for fallback dispatch")
         active_console = console or Console(highlight=False, soft_wrap=False)
-        render_header_oneshot(console=active_console, settings=self.settings)
+        render_header_oneshot(console=active_console)
         chosen = degraded_palette(self.exposed, console=active_console, stdin=stdin)
         cli_command = self.cli
         if not isinstance(cli_command, click.Group):
@@ -132,6 +130,5 @@ class Protocol:
             )
         return CapabilityReport(True, None)
 
-    def _dispatch_cli(self, argv: list[str] | None) -> None:
-        args = sys.argv[1:] if argv is None else argv
-        self.cli.main(args=args, standalone_mode=True)
+    def _dispatch_cli(self, argv: list[str]) -> None:
+        self.cli.main(args=argv, standalone_mode=True)

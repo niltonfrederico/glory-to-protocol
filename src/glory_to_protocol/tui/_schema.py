@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from types import EllipsisType
 from typing import Any
 
@@ -30,28 +31,22 @@ def fields_from_typer(cmd: click.Command) -> list[FormField]:
     for param in cmd.params:
         if not isinstance(param, (click.Argument, click.Option)):
             continue
-        if isinstance(param, click.Option) and param.name in _TYPER_INTERNAL_PARAMS:
-            continue
-        if bool(getattr(param, "hidden", False)):
-            continue
-        default = param.default if param.default is not None else Ellipsis
-        if param.required and (default is None or default is Ellipsis):
-            default = Ellipsis
-        choices = _choices_from(param)
-        annotation = _annotation_for(param)
-        help_text = getattr(param, "help", "") or ""
-        multiple = bool(getattr(param, "multiple", False)) or bool(
-            getattr(param, "nargs", 1) not in (1, None)
-        )
         if param.name is None:
             continue
+        if isinstance(param, click.Option) and param.name in _TYPER_INTERNAL_PARAMS:
+            continue
+        if getattr(param, "hidden", False):
+            continue
+        default = Ellipsis if param.required or param.default is None else param.default
+        nargs = getattr(param, "nargs", 1)
+        multiple = bool(getattr(param, "multiple", False)) or nargs not in (1, None)
         fields.append(
             FormField(
                 name=param.name,
-                annotation=annotation,
+                annotation=_annotation_for(param),
                 default=default,
-                help=help_text,
-                choices=choices,
+                help=getattr(param, "help", "") or "",
+                choices=_choices_from(param),
                 multiple=multiple,
                 hidden=False,
             )
@@ -74,9 +69,5 @@ def _annotation_for(param: click.Parameter) -> type:
     if isinstance(ptype, click.types.FloatParamType):
         return float
     if isinstance(ptype, click.Path):
-        from pathlib import Path as _Path
-
-        return _Path
-    if isinstance(ptype, click.Choice):
-        return str
+        return Path
     return str
