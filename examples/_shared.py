@@ -1,6 +1,9 @@
-"""Showcase of the bureau's visual components.
+"""Shared building blocks for the example CLIs.
 
-Run with: `uv run protocol-showcase [logo|palette|wrap|jobs|stamps]`.
+Three runnable entry points (`examples.cli`, `examples.tui`, `examples.hybrid`)
+all build the same Typer app from this module and wrap it in a `Protocol`
+facade with a different `Mode`. The commands themselves — logo, palette, wrap,
+jobs, stamps — are identical across the three variants.
 """
 
 from __future__ import annotations
@@ -10,14 +13,12 @@ from collections.abc import Callable
 from datetime import UTC
 from datetime import datetime
 from pathlib import Path
+from types import FunctionType
 from typing import Annotated
 
 import typer
 from rich.console import Console
 
-from glory_to_protocol import Mode
-from glory_to_protocol import Protocol
-from glory_to_protocol import ProtocolSettings
 from glory_to_protocol import expose
 from glory_to_protocol.jobs.types import Job
 from glory_to_protocol.tui import theme
@@ -151,19 +152,13 @@ COMPONENTS: dict[str, tuple[str, Callable[[Form], None]]] = {
     "stamps": ("APPROVE / REJECT / ORDER / REVIEW stamps.", _render_stamps),
 }
 
-app = typer.Typer(add_completion=False, no_args_is_help=False)
-
-
-@app.callback(invoke_without_command=True)
-def default(
-    ctx: typer.Context,
-    save: SaveOption = False,
-    path: PathOption = None,
-) -> None:
-    """Render TUI components. Without a subcommand, shows everything."""
-    if ctx.invoked_subcommand is not None:
-        return
-    _run("tui showcase", _render_all, save, path)
+PALETTE_ENTRIES: dict[str, tuple[str, str | None]] = {
+    "logo": ("visual", "◈"),
+    "palette": ("visual", None),
+    "wrap": ("visual", None),
+    "jobs": ("runtime", "⌛"),
+    "stamps": ("visual", "☷"),
+}
 
 
 def _register(name: str, render: Callable[[Form], None]) -> Callable[..., None]:
@@ -173,38 +168,39 @@ def _register(name: str, render: Callable[[Form], None]) -> Callable[..., None]:
     return cmd
 
 
-for _name, (_help, _render) in COMPONENTS.items():
-    app.command(_name, help=_help)(_register(_name, _render))
+def build_app() -> typer.Typer:
+    """Return a Typer app with the showcase commands registered."""
+    app = typer.Typer(add_completion=False, no_args_is_help=False)
+
+    @app.callback(invoke_without_command=True)
+    def default(
+        ctx: typer.Context,
+        save: SaveOption = False,
+        path: PathOption = None,
+    ) -> None:
+        """Render TUI components. Without a subcommand, shows everything."""
+        if ctx.invoked_subcommand is not None:
+            return
+        _run("tui showcase", _render_all, save, path)
+
+    for name, (help_text, render) in COMPONENTS.items():
+        app.command(name, help=help_text)(_register(name, render))
+
+    expose_components(app)
+    return app
 
 
-def _post_expose(name: str, *, section: str, icon: str | None = None) -> None:
-    """Apply @expose to a callback already registered on `app`."""
-    from types import FunctionType
-
+def expose_components(app: typer.Typer) -> None:
+    """Attach `@expose` metadata to every command in `app`."""
     for command_info in app.registered_commands:
         callback = command_info.callback
         if not isinstance(callback, FunctionType):
             continue
-        cb_name = command_info.name if command_info.name is not None else callback.__name__
-        if cb_name == name:
-            expose(section=section, icon=icon)(callback)
-            return
-    raise RuntimeError(f"command {name!r} not found on showcase app")
-
-
-_post_expose("logo", section="visual", icon="◈")
-_post_expose("stamps", section="visual", icon="☷")
-
-
-protocol = Protocol(
-    typer_app=app,
-    settings=ProtocolSettings(mode=Mode.CLI),
-)
-
-
-def main() -> None:
-    protocol.run()
-
-
-if __name__ == "__main__":
-    main()
+        name = command_info.name if command_info.name is not None else callback.__name__
+        entry = PALETTE_ENTRIES.get(name)
+        if entry is None:
+            continue
+        section, icon = entry
+        help_text, _ = COMPONENTS[name]
+        expose(label=name, section=section, icon=icon)(callback)
+        callback.__doc__ = help_text

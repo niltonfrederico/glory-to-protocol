@@ -52,8 +52,9 @@ Issues = "https://github.com/niltonfrederico/glory-to-protocol/issues"
 Changelog = "https://github.com/niltonfrederico/glory-to-protocol/releases"
 
 [project.scripts]
-protocol-showcase = "examples.showcase:app"
-protocol = "examples.showcase:main"
+protocol-cli = "examples.cli:main"
+protocol-tui = "examples.tui:main"
+protocol-hybrid = "examples.hybrid:main"
 
 [build-system]
 requires = ["hatchling"]

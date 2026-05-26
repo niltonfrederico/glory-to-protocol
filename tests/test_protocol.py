@@ -270,6 +270,18 @@ def test_should_dispatch_cli_when_mode_hybrid_with_subcommand_via_run(monkeypatc
     assert exc_info.value.code == 0
 
 
+def test_should_dispatch_cli_when_mode_hybrid_with_help_flag(monkeypatch):
+    app = _build_app()
+    protocol = Protocol(
+        typer_app=app,
+        settings=ProtocolSettings(mode=Mode.HYBRID, fallback=Fallback.RICH),
+    )
+    _force_no_tty(monkeypatch)
+    with pytest.raises(SystemExit) as exc_info:
+        protocol.run(argv=["--help"])
+    assert exc_info.value.code == 0
+
+
 def test_should_dispatch_cli_when_mode_cli_via_run(monkeypatch):
     app = _build_app()
     protocol = Protocol(

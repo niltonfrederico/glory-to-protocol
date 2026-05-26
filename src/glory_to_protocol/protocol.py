@@ -76,7 +76,7 @@ class Protocol:
             self._dispatch_cli(argv)
             return
 
-        if mode is Mode.HYBRID and self._has_subcommand(argv):
+        if mode is Mode.HYBRID and argv:
             self._dispatch_cli(argv)
             return
 
@@ -88,12 +88,6 @@ class Protocol:
             raise ProtocolUnavailable(report.reason or "tui unavailable")
 
         self._dispatch_fallback(console=console, stdin=stdin)
-
-    @staticmethod
-    def _has_subcommand(argv: list[str]) -> bool:
-        if not argv:
-            return False
-        return not argv[0].startswith("-")
 
     def _dispatch_fallback(
         self,
