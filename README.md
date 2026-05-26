@@ -25,8 +25,10 @@ decision stamps (`approve` / `reject` / `order` / `review`), themed `--help`,
 an ASCII logo header, and a live ticker for background jobs.
 
 `0.3.0` adds the `Protocol` facade, the `@expose` palette decorator, and a
-Rich-rendered fallback path. The Textual shell (full interactive surface) lands
-in `0.4.0` behind the optional `[tui]` extra.
+Rich-rendered fallback path. `0.4.0` adds the full Textual surface — fullscreen
+alt-screen with palette, form, help-as-directive overlay, native command
+palette, and an outcome stamp — all customizable through `BureauTheme` and
+`LayoutSettings`.
 
 <p align="center">
   <img src="assets/gifs/showcase.gif" alt="protocol-showcase — all TUI components rendered" width="900">
@@ -74,6 +76,8 @@ The full bureau archive is in [`docs/`](docs/README.md), sorted by intent:
 | [Reference: settings](docs/reference/settings.md) | Every field on `ProtocolSettings`, with env-var overrides. |
 | [Reference: components](docs/reference/components.md) | `Form`, logo, theme, stamps. Signatures and tables. |
 | [Reference: jobs](docs/reference/jobs.md) | `JobRunner`, `PipelineRunner`, callbacks, safeguards. |
+| [Reference: textual surface](docs/reference/textual.md) | `ProtocolApp`, `BureauTheme`, `LayoutSettings`, bindings, palette. |
+| [How-to: customize the TUI](docs/how-to/customize-tui.md) | Override theme, keybinds, or subclass `ProtocolApp`. |
 | [Explanation: dispatch modes](docs/explanation/dispatch-modes.md) | Why `Mode` and `Fallback` are separate axes; the capability check. |
 
 ## Status
@@ -83,8 +87,8 @@ tests, ~98% coverage). Minor versions may still refine APIs before 1.0.
 
 Planned:
 
-- `0.4.0` — Textual shell behind the `[tui]` extra, palette shortcuts.
-- `0.5.0+` — Live `JobsTicker` / `LogTail` integration, theming injection, i18n.
+- `0.5.0` — Live `JobsTicker` / `LogTail` integration inside the Textual surface, animated stamps.
+- `0.6.0+` — i18n for footer + status strings, additional layout patterns (multi-pane).
 
 Want a favor from the Верховный Лидер (Supreme Leader)?
 [Open an issue](https://github.com/niltonfrederico/glory-to-protocol/issues/new).

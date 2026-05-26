@@ -25,16 +25,18 @@ você precisa agora — não pelo tema do documento.
 ## Guias práticos
 
 - [**Modo fallback**](how-to/use-fallback-mode.pt-br.md) — Plugue a facade `Protocol`, escolha um `Mode`, exponha comandos pra paleta interativa, controle o caminho Rich.
+- [**Customizar a TUI**](how-to/customize-tui.pt-br.md) — Troque o `BureauTheme`, sobrescreva keybinds, subclasse `ProtocolApp` pra adicionar screens próprios.
 
 ## Referência
 
 - [**Settings**](reference/settings.pt-br.md) — `ProtocolSettings`, todos os campos, sub-models, env vars.
 - [**Componentes**](reference/components.pt-br.md) — `Form`, `logo_large`, `logo_small`, `theme`, stamps. Assinaturas completas.
 - [**Jobs**](reference/jobs.pt-br.md) — `Job`, `JobOutcome`, `JobRunner`, `PipelineRunner`, `PipelineFailed`. Callbacks, guard-rails, semântica.
+- [**Superfície Textual**](reference/textual.pt-br.md) — `ProtocolApp`, `BureauTheme`, `LayoutSettings`, bindings default, paleta de cores.
 
 ## Explicação
 
-- [**Modos de dispatch**](explanation/dispatch-modes.pt-br.md) — Por que `Mode` e `Fallback` são eixos separados. O que a capability check realmente checa. Quando o shell Textual entra.
+- [**Modos de dispatch**](explanation/dispatch-modes.pt-br.md) — Por que `Mode` e `Fallback` são eixos separados. O que a capability check realmente checa. Como a superfície Textual se encaixa.
 
 ## Índice
 

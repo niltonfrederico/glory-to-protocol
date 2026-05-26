@@ -58,12 +58,11 @@ So the lib splits them:
 | `textual` is not importable | The optional `[tui]` extra was not installed. |
 | Terminal smaller than `viewport.min_width × min_height` | Forms and palette would not fit; the experience would be worse than the fallback. |
 
-In 0.3.0 the check also returns "not ok" for a placeholder reason — the
-Textual surface has not been built yet. This is intentional: the dispatch
-plumbing ships in 0.3.0 so embedding CLIs can already wire `Protocol` into
-their entry point; the Textual app itself lands in 0.4.0 alongside the `[tui]`
-extra. Until then every `tui`/`hybrid` invocation traverses the fallback
-branch.
+As of `0.4.0` a passing capability check launches the Textual surface
+([`ProtocolApp`](../reference/textual.md)). Earlier (`0.3.0`) the check
+returned "not implemented yet" even on a successful probe, so every TUI/HYBRID
+invocation traversed the fallback branch. That stub is gone — the live
+surface engages as soon as the probe passes.
 
 ## The decision tree
 
@@ -77,8 +76,9 @@ run(argv)
   └─ otherwise:
        capability_check()
          │
-         ├─ ok      → (0.4.0+) Textual shell
-         │           (0.3.0)  fall through, "not implemented yet"
+         ├─ ok      → ProtocolApp (alt-screen Textual)
+         │              ├─ PaletteScreen → FormScreen → app.exit((cb, kwargs))
+         │              └─ outcome stamp printed to scrollback (opt-out via show_result_stamp)
          │
          └─ not ok  → fallback:
                        ├─ RICH   → Rich palette + prompt sequence
@@ -116,14 +116,14 @@ respecting `@app.command("custom-name")` overrides.
 
 | Release | What changes |
 | --- | --- |
-| **0.3.0** (current) | `Protocol`, `expose`, `Mode`, `Fallback`, capability check, Rich fallback. Textual path returns "not implemented yet" so fallback engages on every TUI invocation. |
-| **0.4.0** | Textual shell behind the `[tui]` extra. `mode=Mode.TUI` and bare `mode=Mode.HYBRID` invocations open the live palette + form surface. |
-| **0.5.0+** | Live `JobsTicker` / `LogTail` integration, palette shortcuts (`ctrl+k`), theming injection knobs, i18n. |
+| **0.3.0** | `Protocol`, `expose`, `Mode`, `Fallback`, capability check, Rich fallback. Textual stub returned "not implemented yet" so fallback engaged on every TUI invocation. |
+| **0.4.0** (current) | Live Textual surface — `ProtocolApp`, palette, form, help-as-directive, native command palette, result stamp. `BureauTheme` + `LayoutSettings` for identity overrides; `app_factory` for subclassing. |
+| **0.5.0+** | Live `JobsTicker` / `LogTail` inside the Textual surface, animated stamps, i18n on footer/status strings. |
 
-The 0.3.0 → 0.4.0 jump should not require code changes in embedding CLIs: the
-same `Protocol(typer_app=..., settings=...)` plumbing keeps working. Adding
-`glory-to-protocol[tui]` to your dependencies installs Textual and lifts the
-capability-check verdict.
+When the Textual surface lands in your dependency tree, the skeleton stays
+identity-aware: consumers swap `BureauTheme.name`, `logo_text`, accent colors
+without touching screens or widgets, and the help overlay reflects the override
+through its `directive_prefix` and `sign_off` fields.
 
 ## See also
 

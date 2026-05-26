@@ -237,3 +237,9 @@ construção. Esse loop pode não ser o que o runner usa, e uma coroutine só po
 ser awaited uma vez — o runner respawnando o mesmo `Job` duas vezes daria
 runtime error. O contrato de factory deixa cada spawn produzir um awaitable
 fresco, vinculado no momento certo.
+
+## Roadmap
+
+Hoje `JobRunner` e `PipelineRunner` produzem renderables Rich (live regions,
+stamps) que funcionam dentro do `Form` e do fallback Rich. Um widget
+`JobsTicker` ao vivo hospedado dentro da superfície Textual entra em `0.5.0`.

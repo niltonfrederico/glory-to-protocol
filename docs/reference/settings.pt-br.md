@@ -94,6 +94,22 @@ Consumido pela paleta interativa (entra com o shell Textual em 0.4.0).
 A capability check rejeita terminais menores que `min_width × min_height`,
 disparando o caminho de fallback.
 
+## `LayoutSettings`
+
+A identidade da superfície Textual. Documentação completa em
+[`docs/reference/textual.pt-br.md`](textual.pt-br.md); resumo nível
+`ProtocolSettings`:
+
+| Campo | Tipo | Default | Função |
+| --- | --- | --- | --- |
+| `bureau` | `BureauTheme` | Defaults NIRVYTEKH | Logo text, nome, accent, labels do footer, strings do despacho |
+| `logo_size` | `"small" \| "medium" \| "large"` | `"medium"` | Variante do logo no `OfficialHeader` |
+| `keybinds` | `dict[str, str]` | `{quit:q, help:question_mark, back:escape, filter:slash}` | Mapping ação → tecla |
+| `show_result_stamp` | `bool` | `True` | Imprime stamp de outcome em todo dispatch |
+
+Override por env: `PROTOCOL_LAYOUT__BUREAU__ACCENT='#00ffea'`,
+`PROTOCOL_LAYOUT__LOGO_SIZE=large`, etc.
+
 ## `Strings`
 
 Cinco subgrupos. Defaults são cirílicos, batendo com a estética do bureau.

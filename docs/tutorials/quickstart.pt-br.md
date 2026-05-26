@@ -179,10 +179,14 @@ de verdade no seu ambiente.
 ## Próximos passos
 
 - **A superfície interativa** — envolva `app` numa facade `Protocol` com
-  `Mode.HYBRID` e adicione `@expose` nos seus comandos. Veja
-  [how-to/use-fallback-mode.pt-br.md](../how-to/use-fallback-mode.pt-br.md).
+  `Mode.HYBRID` e adicione `@expose` nos seus comandos. Rodar sem argumentos
+  abre a paleta Textual fullscreen (j/k pra navegar, `?` pro help-as-despacho,
+  `ctrl+\` pra command palette nativa). Veja
+  [reference/textual.pt-br.md](../reference/textual.pt-br.md) e
+  [how-to/customize-tui.pt-br.md](../how-to/customize-tui.pt-br.md).
 - **Branding custom** — mude logo, diretor, assinatura, e stamps via
-  `configure()`. Veja [reference/settings.pt-br.md](../reference/settings.pt-br.md).
+  `configure()`; troque a identidade Textual via `BureauTheme`. Veja
+  [reference/settings.pt-br.md](../reference/settings.pt-br.md).
 - **Mais componentes** — `theme.HEADER`, `theme.CYRILLIC_ACCENT`, wrap,
   rollback de pipeline. Veja [reference/components.pt-br.md](../reference/components.pt-br.md)
   e [reference/jobs.pt-br.md](../reference/jobs.pt-br.md).

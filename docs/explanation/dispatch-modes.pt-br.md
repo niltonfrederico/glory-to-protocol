@@ -60,11 +60,11 @@ Então a lib separa:
 | `textual` não importa | O extra opcional `[tui]` não foi instalado. |
 | Terminal menor que `viewport.min_width × min_height` | Forms e paleta não caberiam; a experiência seria pior que o fallback. |
 
-Em 0.3.0 a check também retorna "not ok" por uma razão placeholder — a
-superfície Textual ainda não foi construída. Isso é intencional: o encanamento
-do dispatch entra em 0.3.0 pra CLIs hospedeiras já poderem ligar `Protocol`
-nos seus entry points; a Textual app em si entra em 0.4.0 junto com o extra
-`[tui]`. Até lá, toda invocação `tui`/`hybrid` atravessa o ramo de fallback.
+A partir do `0.4.0`, uma capability check bem-sucedida sobe a superfície Textual
+([`ProtocolApp`](../reference/textual.pt-br.md)). Antes (`0.3.0`) a check
+retornava "not implemented yet" mesmo numa probe ok, então toda invocação
+TUI/HYBRID atravessava o fallback. Esse stub foi removido — a superfície ao
+vivo engata assim que a probe passa.
 
 ## A árvore de decisão
 
@@ -78,8 +78,9 @@ run(argv)
   └─ caso contrário:
        capability_check()
          │
-         ├─ ok      → (0.4.0+) shell Textual
-         │           (0.3.0)  cai pro fallback, "not implemented yet"
+         ├─ ok      → ProtocolApp (alt-screen Textual)
+         │              ├─ PaletteScreen → FormScreen → app.exit((cb, kwargs))
+         │              └─ stamp de resultado no scrollback (opt-out via show_result_stamp)
          │
          └─ not ok  → fallback:
                        ├─ RICH   → paleta Rich + prompts
@@ -117,14 +118,14 @@ respeitando overrides tipo `@app.command("custom-name")`.
 
 | Release | O que muda |
 | --- | --- |
-| **0.3.0** (atual) | `Protocol`, `expose`, `Mode`, `Fallback`, capability check, fallback Rich. Caminho Textual retorna "not implemented yet" então o fallback engaja em toda invocação TUI. |
-| **0.4.0** | Shell Textual atrás do extra `[tui]`. `mode=Mode.TUI` e `mode=Mode.HYBRID` nu abrem paleta + forms ao vivo. |
-| **0.5.0+** | Integração com `JobsTicker` / `LogTail` ao vivo, atalhos de paleta (`ctrl+k`), botões de injeção de tema, i18n. |
+| **0.3.0** | `Protocol`, `expose`, `Mode`, `Fallback`, capability check, fallback Rich. Stub Textual retornava "not implemented yet" então o fallback engatava em toda invocação TUI. |
+| **0.4.0** (atual) | Superfície Textual ao vivo — `ProtocolApp`, paleta, form, help-as-despacho, command palette nativa, stamp de resultado. `BureauTheme` + `LayoutSettings` pra overrides de identidade; `app_factory` pra subclasse. |
+| **0.5.0+** | `JobsTicker` / `LogTail` ao vivo dentro da superfície Textual, stamps animados, i18n no footer/status strings. |
 
-O salto 0.3.0 → 0.4.0 não deve exigir mudanças de código em CLIs hospedeiras:
-o mesmo encanamento `Protocol(typer_app=..., settings=...)` segue funcionando.
-Adicionar `glory-to-protocol[tui]` nas dependências instala Textual e levanta
-o veredito da capability check.
+Quando a superfície Textual está disponível na árvore de dependências, o
+esqueleto continua identity-aware: consumers trocam `BureauTheme.name`,
+`logo_text`, accent colors sem tocar em screens ou widgets, e o overlay de
+help reflete o override via `directive_prefix` e `sign_off`.
 
 ## Veja também
 

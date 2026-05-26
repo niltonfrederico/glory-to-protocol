@@ -1,5 +1,6 @@
 from enum import StrEnum
 from typing import Any
+from typing import Literal
 from typing import Self
 
 from pydantic import BaseModel
@@ -12,6 +13,7 @@ from pydantic_settings import SettingsConfigDict
 from glory_to_protocol.strings import Strings
 from glory_to_protocol.tui import _ascii
 from glory_to_protocol.tui.exceptions import InvalidASCIICharactersError
+from glory_to_protocol.tui.identity import BureauTheme
 
 _DEFAULT_APP_NAME = "Protocol"
 
@@ -50,6 +52,23 @@ class ViewportSettings(BaseModel):
     require_fullscreen: bool = Field(False)
 
 
+LogoSize = Literal["small", "medium", "large"]
+
+_DEFAULT_KEYBINDS: dict[str, str] = {
+    "quit": "q",
+    "help": "question_mark",
+    "back": "escape",
+    "filter": "slash",
+}
+
+
+class LayoutSettings(BaseModel):
+    bureau: BureauTheme = Field(default_factory=BureauTheme)
+    logo_size: LogoSize = Field("medium")
+    keybinds: dict[str, str] = Field(default_factory=lambda: dict(_DEFAULT_KEYBINDS))
+    show_result_stamp: bool = Field(True)
+
+
 class ProtocolSettings(BaseSettings):
     app_name: str = Field(_DEFAULT_APP_NAME)
     logo_text: str = Field(_DEFAULT_APP_NAME)
@@ -66,6 +85,7 @@ class ProtocolSettings(BaseSettings):
 
     palette: PaletteSettings = PaletteSettings()
     viewport: ViewportSettings = ViewportSettings()
+    layout: LayoutSettings = Field(default_factory=LayoutSettings)
     strings: Strings = Strings()
 
     model_config = SettingsConfigDict(
@@ -94,9 +114,11 @@ def get_settings() -> ProtocolSettings:
 def _invalidate_derived_caches() -> None:
     # Late import: tui.logo imports settings, so importing at module top loops.
     from glory_to_protocol.tui.logo import logo_large
+    from glory_to_protocol.tui.logo import logo_medium
     from glory_to_protocol.tui.logo import logo_small
 
     logo_large.cache_clear()
+    logo_medium.cache_clear()
     logo_small.cache_clear()
 
 

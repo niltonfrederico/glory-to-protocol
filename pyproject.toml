@@ -43,6 +43,7 @@ dependencies = [
     "typer>=0.25",
     "click>=8.1",
     "pydantic-settings>=2.14.1",
+    "textual>=1.0,<2",
 ]
 
 [project.urls]

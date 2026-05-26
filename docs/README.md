@@ -25,16 +25,18 @@ you need right now — not what the document is about.
 ## How-to guides
 
 - [**Use fallback mode**](how-to/use-fallback-mode.md) — Wire the `Protocol` facade, pick a `Mode`, expose commands to the interactive palette, control the Rich fallback path.
+- [**Customize the TUI**](how-to/customize-tui.md) — Swap the `BureauTheme`, override keybinds, subclass `ProtocolApp` to add your own screens.
 
 ## Reference
 
 - [**Settings**](reference/settings.md) — `ProtocolSettings`, every field, every sub-model, every env var.
 - [**Components**](reference/components.md) — `Form`, `logo_large`, `logo_small`, `theme`, stamps. Full signatures.
 - [**Jobs**](reference/jobs.md) — `Job`, `JobOutcome`, `JobRunner`, `PipelineRunner`, `PipelineFailed`. Callbacks, safeguards, semantics.
+- [**Textual surface**](reference/textual.md) — `ProtocolApp`, `BureauTheme`, `LayoutSettings`, default bindings, color palette.
 
 ## Explanation
 
-- [**Dispatch modes**](explanation/dispatch-modes.md) — Why `Mode` and `Fallback` are separate axes. What the capability check actually checks. When the Textual shell lands.
+- [**Dispatch modes**](explanation/dispatch-modes.md) — Why `Mode` and `Fallback` are separate axes. What the capability check actually checks. How the Textual surface fits in.
 
 ## Index
 

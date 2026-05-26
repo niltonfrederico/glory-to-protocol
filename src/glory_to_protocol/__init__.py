@@ -7,6 +7,7 @@ if TYPE_CHECKING:
     from glory_to_protocol.registry import ExposedCommand
     from glory_to_protocol.registry import expose
     from glory_to_protocol.settings import Fallback
+    from glory_to_protocol.settings import LayoutSettings
     from glory_to_protocol.settings import Mode
     from glory_to_protocol.settings import ProtocolSettings
     from glory_to_protocol.settings import configure
@@ -20,21 +21,41 @@ if TYPE_CHECKING:
     from glory_to_protocol.tui import stamp_reject
     from glory_to_protocol.tui import stamp_review
     from glory_to_protocol.tui import theme
+    from glory_to_protocol.tui.app import ProtocolApp
+    from glory_to_protocol.tui.identity import BureauTheme
     from glory_to_protocol.tui.logo import logo_large
+    from glory_to_protocol.tui.logo import logo_medium
     from glory_to_protocol.tui.logo import logo_small
+    from glory_to_protocol.tui.providers import ExposedCommandProvider
+    from glory_to_protocol.tui.screens.form import FormScreen
+    from glory_to_protocol.tui.screens.help import HelpOverlay
+    from glory_to_protocol.tui.screens.palette import PaletteScreen
+    from glory_to_protocol.tui.screens.result import render_result_stamp
+    from glory_to_protocol.tui.widgets.footer import BindingsFooter
+    from glory_to_protocol.tui.widgets.header import OfficialHeader
     from glory_to_protocol.typer import ProtocolTyper
     from glory_to_protocol.typer import ProtocolTyperCommand
     from glory_to_protocol.typer import ProtocolTyperGroup
     from glory_to_protocol.typer import make_app
 
 __all__ = [
+    "BindingsFooter",
+    "BureauTheme",
     "ExposedCommand",
+    "ExposedCommandProvider",
     "Fallback",
     "Form",
+    "FormScreen",
+    "HelpOverlay",
     "LOGO_LARGE",
+    "LOGO_MEDIUM",
     "LOGO_SMALL",
+    "LayoutSettings",
     "Mode",
+    "OfficialHeader",
+    "PaletteScreen",
     "Protocol",
+    "ProtocolApp",
     "ProtocolSettings",
     "ProtocolTyper",
     "ProtocolTyperCommand",
@@ -45,9 +66,11 @@ __all__ = [
     "expose",
     "get_settings",
     "logo_large",
+    "logo_medium",
     "logo_small",
     "make_app",
     "render_header",
+    "render_result_stamp",
     "reset_settings",
     "stamp_approve",
     "stamp_order",
@@ -57,13 +80,23 @@ __all__ = [
 ]
 
 _LAZY_MAP: dict[str, tuple[str, str]] = {
+    "BindingsFooter": ("glory_to_protocol.tui.widgets.footer", "BindingsFooter"),
+    "BureauTheme": ("glory_to_protocol.tui.identity", "BureauTheme"),
     "ExposedCommand": ("glory_to_protocol.registry", "ExposedCommand"),
+    "ExposedCommandProvider": ("glory_to_protocol.tui.providers", "ExposedCommandProvider"),
     "Fallback": ("glory_to_protocol.settings", "Fallback"),
     "Form": ("glory_to_protocol.tui", "Form"),
+    "FormScreen": ("glory_to_protocol.tui.screens.form", "FormScreen"),
+    "HelpOverlay": ("glory_to_protocol.tui.screens.help", "HelpOverlay"),
     "LOGO_LARGE": ("glory_to_protocol.tui.logo", "LOGO_LARGE"),
+    "LOGO_MEDIUM": ("glory_to_protocol.tui.logo", "LOGO_MEDIUM"),
     "LOGO_SMALL": ("glory_to_protocol.tui.logo", "LOGO_SMALL"),
+    "LayoutSettings": ("glory_to_protocol.settings", "LayoutSettings"),
     "Mode": ("glory_to_protocol.settings", "Mode"),
+    "OfficialHeader": ("glory_to_protocol.tui.widgets.header", "OfficialHeader"),
+    "PaletteScreen": ("glory_to_protocol.tui.screens.palette", "PaletteScreen"),
     "Protocol": ("glory_to_protocol.protocol", "Protocol"),
+    "ProtocolApp": ("glory_to_protocol.tui.app", "ProtocolApp"),
     "ProtocolSettings": ("glory_to_protocol.settings", "ProtocolSettings"),
     "ProtocolTyper": ("glory_to_protocol.typer", "ProtocolTyper"),
     "ProtocolTyperCommand": ("glory_to_protocol.typer", "ProtocolTyperCommand"),
@@ -74,9 +107,11 @@ _LAZY_MAP: dict[str, tuple[str, str]] = {
     "expose": ("glory_to_protocol.registry", "expose"),
     "get_settings": ("glory_to_protocol.settings", "get_settings"),
     "logo_large": ("glory_to_protocol.tui.logo", "logo_large"),
+    "logo_medium": ("glory_to_protocol.tui.logo", "logo_medium"),
     "logo_small": ("glory_to_protocol.tui.logo", "logo_small"),
     "make_app": ("glory_to_protocol.typer", "make_app"),
     "render_header": ("glory_to_protocol.tui", "render_header"),
+    "render_result_stamp": ("glory_to_protocol.tui.screens.result", "render_result_stamp"),
     "reset_settings": ("glory_to_protocol.settings", "reset_settings"),
     "stamp_approve": ("glory_to_protocol.tui", "stamp_approve"),
     "stamp_order": ("glory_to_protocol.tui", "stamp_order"),

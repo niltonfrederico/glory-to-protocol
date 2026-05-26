@@ -179,10 +179,14 @@ commands in your environment.
 ## What's next
 
 - **The interactive surface** — wrap `app` in a `Protocol` facade with
-  `Mode.HYBRID` and add `@expose` to your commands. See
-  [how-to/use-fallback-mode.md](../how-to/use-fallback-mode.md).
+  `Mode.HYBRID` and add `@expose` to your commands. Running with no arguments
+  opens the fullscreen Textual palette (j/k nav, `?` for help-as-directive,
+  `ctrl+\` for native command palette). See
+  [reference/textual.md](../reference/textual.md) and
+  [how-to/customize-tui.md](../how-to/customize-tui.md).
 - **Custom branding** — change the logo, director, signature, and stamps via
-  `configure()`. See [reference/settings.md](../reference/settings.md).
+  `configure()`; swap the Textual identity via `BureauTheme`. See
+  [reference/settings.md](../reference/settings.md).
 - **More components** — `theme.HEADER`, `theme.CYRILLIC_ACCENT`, line wrap,
   pipeline rollback. See [reference/components.md](../reference/components.md)
   and [reference/jobs.md](../reference/jobs.md).

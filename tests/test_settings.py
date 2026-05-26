@@ -161,3 +161,35 @@ def test_should_preserve_other_fields_when_configure_overrides_one():
     assert configured.mode is Mode.TUI
     assert configured.fallback is Fallback.RICH
     reset_settings()
+
+
+def test_should_default_layout_to_nirvytekh_when_unset():
+    settings = ProtocolSettings()
+    assert settings.layout.bureau.name == "NIRVYTEKH"
+    assert settings.layout.logo_size == "medium"
+    assert settings.layout.show_result_stamp is True
+    assert settings.layout.keybinds["quit"] == "q"
+
+
+def test_should_load_layout_bureau_field_from_env(monkeypatch):
+    monkeypatch.setenv("PROTOCOL_LAYOUT__BUREAU__ACCENT", "#00ffea")
+    settings = ProtocolSettings()
+    assert settings.layout.bureau.accent == "#00ffea"
+
+
+def test_should_load_layout_logo_size_from_env(monkeypatch):
+    monkeypatch.setenv("PROTOCOL_LAYOUT__LOGO_SIZE", "large")
+    settings = ProtocolSettings()
+    assert settings.layout.logo_size == "large"
+
+
+def test_should_override_layout_when_configure_called():
+    from glory_to_protocol.settings import LayoutSettings
+    from glory_to_protocol.settings import configure
+    from glory_to_protocol.settings import reset_settings
+    from glory_to_protocol.tui.identity import BureauTheme
+
+    reset_settings()
+    configured = configure(layout=LayoutSettings(bureau=BureauTheme(name="PROTON")))
+    assert configured.layout.bureau.name == "PROTON"
+    reset_settings()

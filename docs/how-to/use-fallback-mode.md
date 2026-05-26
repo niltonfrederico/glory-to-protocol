@@ -123,10 +123,9 @@ The capability check fails when any of these is true:
 - The `textual` package is not importable.
 - The terminal is smaller than `settings.viewport.min_width × min_height`.
 
-**In 0.3.0**, the check also fails for "textual surface not implemented yet" —
-the Textual shell lands in 0.4.0 alongside the `[tui]` extra. Until then every
-`tui`/`hybrid` invocation falls through to the Rich path (or raises, depending
-on `fallback`).
+As of `0.4.0` the Textual surface is live — a passing capability check opens
+[`ProtocolApp`](../reference/textual.md), not the Rich path. The fallback only
+engages when the check refuses (no TTY, no `textual`, terminal too small).
 
 ## Step 5 — observe the fallback path
 
@@ -196,6 +195,6 @@ def main() -> None:
 ```
 
 - `my-bureau ingest --path foo.csv` → straight Typer dispatch.
-- `my-bureau` in a terminal → (0.4.0+) Textual shell; today → Rich fallback.
+- `my-bureau` in a terminal → Textual surface (alt-screen palette + form).
 - `my-bureau | cat` → Rich fallback (numbered palette + prompts).
 - With `Fallback.ERROR`, the last two become `ProtocolUnavailable` instead.

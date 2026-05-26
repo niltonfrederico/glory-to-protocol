@@ -156,3 +156,14 @@ from glory_to_protocol import (
 ```
 
 Everything imports lazily — pulling one name does not import the rest.
+
+## Textual surface
+
+`Form`, `logo_*`, `stamp_*`, and `render_header` are the Rich-side components.
+They render in any Console (including the fallback path) and inside Textual
+widgets via `Static(rich_renderable)`.
+
+The Textual-native widgets (`OfficialHeader`, `BindingsFooter`, `PaletteScreen`,
+`FormScreen`, `HelpOverlay`, `ProtocolApp`) are documented in
+[`textual.md`](textual.md). For recipes (theme swap, custom screens, env-var
+overrides), see [`how-to/customize-tui.md`](../how-to/customize-tui.md).

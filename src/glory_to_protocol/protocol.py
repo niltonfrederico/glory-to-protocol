@@ -3,8 +3,10 @@ from __future__ import annotations
 import importlib.util
 import os
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import cached_property
+from typing import Any
 from typing import TextIO
 
 import click
@@ -17,9 +19,11 @@ from glory_to_protocol.settings import Fallback
 from glory_to_protocol.settings import Mode
 from glory_to_protocol.settings import ProtocolSettings
 from glory_to_protocol.tui._schema import fields_from_typer
+from glory_to_protocol.tui.app import ProtocolApp
 from glory_to_protocol.tui.fallback import degraded_palette
 from glory_to_protocol.tui.fallback import prompt_form
 from glory_to_protocol.tui.fallback import render_header_oneshot
+from glory_to_protocol.tui.screens.result import render_result_stamp
 
 
 class ProtocolUnavailable(RuntimeError):
@@ -44,6 +48,9 @@ def _textual_importable() -> bool:
     return importlib.util.find_spec("textual") is not None
 
 
+AppFactory = Callable[["Protocol"], "ProtocolApp"]
+
+
 class Protocol:
     """Public facade. Owns settings + registry; dispatches to Typer or TUI."""
 
@@ -52,10 +59,12 @@ class Protocol:
         *,
         typer_app: typer.Typer,
         settings: ProtocolSettings | None = None,
+        app_factory: AppFactory | None = None,
     ) -> None:
         self.typer_app = typer_app
         self.settings = settings or ProtocolSettings()
         self.exposed: list[ExposedCommand] = discover_exposed(typer_app)
+        self._app_factory: AppFactory = app_factory or ProtocolApp
 
     @cached_property
     def cli(self) -> click.Command:
@@ -82,12 +91,33 @@ class Protocol:
 
         report = self._capability_check()
         if report.ok:
-            report = CapabilityReport(False, "textual surface not implemented yet")
+            self._dispatch_textual()
+            return
 
         if self.settings.fallback is Fallback.ERROR:
             raise ProtocolUnavailable(report.reason or "tui unavailable")
 
         self._dispatch_fallback(console=console, stdin=stdin)
+
+    def _dispatch_textual(self) -> None:
+        app = self._app_factory(self)
+        result = app.run()
+        if result is None:
+            return
+        callback, kwargs = result
+        outcome = self._invoke_callback(callback, kwargs)
+        if self.settings.layout.show_result_stamp:
+            command = next((c for c in self.exposed if c.callback is callback), None)
+            if command is not None:
+                render_result_stamp(command, outcome)
+
+    @staticmethod
+    def _invoke_callback(callback: Callable[..., Any], kwargs: dict[str, Any]) -> str:
+        try:
+            callback(**kwargs)
+        except Exception:
+            return "rejected"
+        return "approved"
 
     def _dispatch_fallback(
         self,

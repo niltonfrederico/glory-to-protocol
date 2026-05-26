@@ -192,28 +192,37 @@ def test_should_report_not_ok_when_terminal_too_small(monkeypatch):
     assert "80" in reason and "24" in reason
 
 
-def test_should_degrade_to_rich_when_textual_capability_ok_but_not_implemented(monkeypatch):
+def test_should_dispatch_textual_when_mode_tui_and_capability_ok(monkeypatch):
     app = _build_app()
     protocol = Protocol(
         typer_app=app,
         settings=ProtocolSettings(mode=Mode.TUI, fallback=Fallback.RICH),
     )
     _force_full_tty(monkeypatch)
-    console = Console(file=StringIO(), record=True, width=100, force_terminal=False)
-    protocol.run(argv=[], console=console, stdin=StringIO("1\n/tmp/x\n"))
-    output = console.export_text()
-    assert "ingest" in output.lower()
+
+    captured: dict[str, object] = {}
+
+    def fake_run(self):  # noqa: ANN001
+        captured["ran"] = True
+        return (lambda path: captured.update(path=path), {"path": "/tmp/x"})
+
+    monkeypatch.setattr("textual.app.App.run", fake_run)
+    protocol.run(argv=[])
+    assert captured["ran"] is True
+    assert captured["path"] == "/tmp/x"
 
 
-def test_should_raise_protocol_unavailable_when_textual_ok_but_fallback_is_error(monkeypatch):
+def test_should_exit_quietly_when_textual_app_returns_none(monkeypatch):
     app = _build_app()
     protocol = Protocol(
         typer_app=app,
-        settings=ProtocolSettings(mode=Mode.TUI, fallback=Fallback.ERROR),
+        settings=ProtocolSettings(mode=Mode.TUI, fallback=Fallback.RICH),
     )
     _force_full_tty(monkeypatch)
-    with pytest.raises(ProtocolUnavailable, match="textual surface"):
-        protocol.run(argv=[])
+
+    monkeypatch.setattr("textual.app.App.run", lambda self: None)
+    # Should not raise, and there's nothing to dispatch.
+    protocol.run(argv=[])
 
 
 def test_should_use_degraded_palette_when_hybrid_without_subcommand(monkeypatch):

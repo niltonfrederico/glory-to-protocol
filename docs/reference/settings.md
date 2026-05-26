@@ -93,6 +93,21 @@ Consumed by the interactive palette (lands with the Textual shell in 0.4.0).
 The capability check rejects terminals smaller than `min_width × min_height`,
 triggering the fallback path.
 
+## `LayoutSettings`
+
+The Textual surface identity. Full field documentation lives in
+[`docs/reference/textual.md`](textual.md); the `ProtocolSettings`-level summary:
+
+| Field | Type | Default | Purpose |
+| --- | --- | --- | --- |
+| `bureau` | `BureauTheme` | NIRVYTEKH defaults | Logo text, name, accent colors, footer labels, despacho strings |
+| `logo_size` | `"small" \| "medium" \| "large"` | `"medium"` | Logo variant in `OfficialHeader` |
+| `keybinds` | `dict[str, str]` | `{quit:q, help:question_mark, back:escape, filter:slash}` | Action → key mapping |
+| `show_result_stamp` | `bool` | `True` | Print outcome stamp after every dispatch |
+
+Env-var override: `PROTOCOL_LAYOUT__BUREAU__ACCENT='#00ffea'`,
+`PROTOCOL_LAYOUT__LOGO_SIZE=large`, etc.
+
 ## `Strings`
 
 Five subgroups. Defaults are Cyrillic, matching the bureau aesthetic.

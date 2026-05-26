@@ -156,3 +156,15 @@ from glory_to_protocol import (
 ```
 
 Tudo importa lazy — puxar um nome não importa os outros.
+
+## Superfície Textual
+
+`Form`, `logo_*`, `stamp_*`, e `render_header` são os componentes Rich-side.
+Renderizam em qualquer Console (incluindo o fallback) e dentro de widgets
+Textual via `Static(rich_renderable)`.
+
+Os widgets Textual-nativos (`OfficialHeader`, `BindingsFooter`, `PaletteScreen`,
+`FormScreen`, `HelpOverlay`, `ProtocolApp`) são documentados em
+[`textual.pt-br.md`](textual.pt-br.md). Pra receitas (troca de tema, screens
+custom, overrides via env vars), veja
+[`how-to/customize-tui.pt-br.md`](../how-to/customize-tui.pt-br.md).

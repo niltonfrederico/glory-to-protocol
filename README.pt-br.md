@@ -26,8 +26,10 @@ emoldurados, quatro carimbos de decisão (`approve` / `reject` / `order` /
 jobs em background.
 
 `0.3.0` adiciona a facade `Protocol`, o decorator de paleta `@expose`, e um
-caminho de fallback renderizado em Rich. O shell Textual (superfície
-interativa completa) entra em `0.4.0` atrás do extra opcional `[tui]`.
+caminho de fallback renderizado em Rich. `0.4.0` adiciona a superfície Textual
+completa — alt-screen fullscreen com palette, form, overlay de help-as-despacho,
+command palette nativa, e carimbo de resultado — toda customizável via
+`BureauTheme` e `LayoutSettings`.
 
 <p align="center">
   <img src="assets/gifs/showcase.gif" alt="protocol-showcase — todos os componentes TUI renderizados" width="900">
@@ -76,6 +78,8 @@ por intenção:
 | [Referência: settings](docs/reference/settings.pt-br.md) | Todo campo de `ProtocolSettings`, com overrides por env var. |
 | [Referência: componentes](docs/reference/components.pt-br.md) | `Form`, logo, theme, stamps. Assinaturas e tabelas. |
 | [Referência: jobs](docs/reference/jobs.pt-br.md) | `JobRunner`, `PipelineRunner`, callbacks, guard-rails. |
+| [Referência: superfície Textual](docs/reference/textual.pt-br.md) | `ProtocolApp`, `BureauTheme`, `LayoutSettings`, bindings, palette. |
+| [How-to: customizar a TUI](docs/how-to/customize-tui.pt-br.md) | Sobrescreva tema, keybinds, ou subclasse `ProtocolApp`. |
 | [Explicação: modos de dispatch](docs/explanation/dispatch-modes.pt-br.md) | Por que `Mode` e `Fallback` são eixos separados; a capability check. |
 
 ## Status
@@ -86,9 +90,9 @@ APIs antes do 1.0.
 
 Planejado:
 
-- `0.4.0` — Shell Textual atrás do extra `[tui]`, atalhos de paleta.
-- `0.5.0+` — Integração com `JobsTicker` / `LogTail` ao vivo, injeção de tema,
-  i18n.
+- `0.5.0` — Integração de `JobsTicker` / `LogTail` ao vivo dentro da superfície
+  Textual, animações de stamp.
+- `0.6.0+` — i18n pro footer + status strings, layouts adicionais (multi-pane).
 
 Quer um favor do Верховный Лидер (Líder Supremo)?
 [Abra uma issue](https://github.com/niltonfrederico/glory-to-protocol/issues/new).
