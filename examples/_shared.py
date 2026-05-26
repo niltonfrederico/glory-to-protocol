@@ -153,11 +153,11 @@ COMPONENTS: dict[str, tuple[str, Callable[[Form], None]]] = {
 }
 
 PALETTE_ENTRIES: dict[str, tuple[str, str | None]] = {
-    "logo": ("visual", "◈"),
+    "logo": ("visual", "*"),
     "palette": ("visual", None),
     "wrap": ("visual", None),
-    "jobs": ("runtime", "⌛"),
-    "stamps": ("visual", "☷"),
+    "jobs": ("runtime", "~"),
+    "stamps": ("visual", "#"),
 }
 
 

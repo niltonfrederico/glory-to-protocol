@@ -18,7 +18,7 @@ def _build_protocol() -> Protocol:
         pass
 
     @typer_app.command()
-    @expose(section="data", icon="◈")
+    @expose(section="data", icon="*")
     def ingest(path: str) -> None:
         """Pull data."""
 
