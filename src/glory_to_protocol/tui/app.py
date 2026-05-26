@@ -70,7 +70,7 @@ class ProtocolApp(App[tuple]):
                 "panel": theme.bg,
                 "boost": theme.bg,
                 "block-cursor-background": theme.accent,
-                "block-cursor-foreground": theme.text_color,
+                "block-cursor-foreground": theme.bg,
                 "block-cursor-blurred-background": theme.bg,
                 "block-cursor-blurred-foreground": theme.gold,
                 "block-cursor-text-style": "bold",
