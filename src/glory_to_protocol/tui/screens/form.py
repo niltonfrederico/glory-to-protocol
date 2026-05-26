@@ -116,7 +116,7 @@ class FormScreen(Vertical):
         widget_id = _field_id(field.name)
         if field.choices is not None:
             options = [(choice, choice) for choice in field.choices]
-            initial = field.default if field.default is not Ellipsis else Select.BLANK
+            initial = field.default if field.default is not Ellipsis else Select.NULL
             return Select(options, value=initial, id=widget_id)
         annotation = field.annotation
         if annotation is bool:
@@ -144,7 +144,7 @@ class FormScreen(Vertical):
                 values[field.name] = widget.value
             elif isinstance(widget, Select):
                 value = widget.value
-                if value is Select.BLANK:
+                if value is Select.NULL:
                     if field.default is not Ellipsis:
                         values[field.name] = field.default
                 else:

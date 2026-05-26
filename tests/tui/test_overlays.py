@@ -39,10 +39,10 @@ async def test_should_open_help_overlay_when_question_mark_pressed():
         await pilot.pause()
         await app.run_action("open_help")
         await pilot.pause()
-        overlay = app.query_one(HelpOverlay)
+        assert isinstance(app.screen, HelpOverlay)
         from textual.widgets import Static
 
-        body = " ".join(str(s.renderable) for s in overlay.query(Static))
+        body = " ".join(str(s.content) for s in app.screen.query(Static))
         assert "ДИРЕКТИВА" in body
         assert "S chestyu, NIRVYTEKH" in body
         assert "quit" in body
@@ -55,10 +55,10 @@ async def test_should_dismiss_help_overlay_when_escape_pressed():
         await pilot.pause()
         await app.run_action("open_help")
         await pilot.pause()
-        assert len(app.query(HelpOverlay)) == 1
+        assert isinstance(app.screen, HelpOverlay)
         await pilot.press("escape")
         await pilot.pause()
-        assert len(app.query(HelpOverlay)) == 0
+        assert not isinstance(app.screen, HelpOverlay)
 
 
 async def test_should_show_custom_directive_prefix_when_theme_overridden():
@@ -71,10 +71,10 @@ async def test_should_show_custom_directive_prefix_when_theme_overridden():
         await pilot.pause()
         await app.run_action("open_help")
         await pilot.pause()
-        overlay = app.query_one(HelpOverlay)
+        assert isinstance(app.screen, HelpOverlay)
         from textual.widgets import Static
 
-        body = " ".join(str(s.renderable) for s in overlay.query(Static))
+        body = " ".join(str(s.content) for s in app.screen.query(Static))
         assert "DIRECTIVE №" in body
         assert "With honor, PROTON" in body
 

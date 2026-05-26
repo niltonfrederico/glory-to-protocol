@@ -28,7 +28,7 @@ async def test_should_mount_header_and_footer_when_app_runs():
         header = app.query_one(OfficialHeader)
         footer = app.query_one(BindingsFooter)
         assert header.border_title == "NIRVYTEKH"
-        assert "quit" in str(footer.renderable).lower()
+        assert "quit" in str(footer.content).lower()
 
 
 async def test_should_carry_custom_bureau_name_in_header_when_theme_overridden():
@@ -56,7 +56,7 @@ async def test_should_render_small_logo_when_logo_size_small():
     async with app.run_test() as pilot:
         await pilot.pause()
         header = app.query_one(OfficialHeader)
-        logo_text = str(header.query_one(".logo", Static).renderable)
+        logo_text = str(header.query_one(".logo", Static).content)
         # Small padding (1) yields "║ NIRVYTEKH ║" tight; medium yields wide spaces.
         assert "║ NIRVYTEKH ║" in logo_text
 
@@ -67,7 +67,7 @@ async def test_should_render_large_logo_when_logo_size_large():
     async with app.run_test() as pilot:
         await pilot.pause()
         header = app.query_one(OfficialHeader)
-        logo_text = str(header.query_one(".logo", Static).renderable)
+        logo_text = str(header.query_one(".logo", Static).content)
         # Large logo uses block ANSI Shadow font, has multi-row glyphs with ║ characters
         assert "█" in logo_text
 
@@ -78,6 +78,6 @@ async def test_should_use_custom_footer_labels_when_theme_overrides_them():
     async with app.run_test() as pilot:
         await pilot.pause()
         footer = app.query_one(BindingsFooter)
-        rendered = str(footer.renderable)
+        rendered = str(footer.content)
         assert "SAIR" in rendered
         assert "AJUDA" in rendered
