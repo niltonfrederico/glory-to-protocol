@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 
 _DEFAULT_FOOTER_BINDINGS: list[tuple[str, str]] = [
-    ("q", "quit"),
+    ("^q", "quit"),
     ("?", "help"),
     ("/", "filter"),
     ("^\\", "palette"),
@@ -38,7 +38,7 @@ class ProtocolApp(App[tuple]):
     Textual event loop.
     """
 
-    COMMANDS = {ExposedCommandProvider}
+    COMMANDS = App.COMMANDS | {ExposedCommandProvider}
 
     BINDINGS = [
         Binding("question_mark", "open_help", "help", show=False),
@@ -47,6 +47,26 @@ class ProtocolApp(App[tuple]):
     DEFAULT_CSS = """
     ProtocolApp {
         background: $bg;
+    }
+    Toast {
+        background: $bg;
+        color: $text-color;
+        border: heavy $accent;
+        border-title-color: $gold;
+        padding: 1 2;
+    }
+    Toast .toast--title {
+        color: $gold;
+        text-style: bold;
+    }
+    Toast.-information {
+        border-left: heavy $accent;
+    }
+    Toast.-warning {
+        border-left: heavy $gold;
+    }
+    Toast.-error {
+        border-left: heavy $accent;
     }
     """
 
@@ -127,3 +147,13 @@ class ProtocolApp(App[tuple]):
         already_open = self.screen.has_class("--textual-command-palette")
         if self.use_command_palette and not already_open:
             self.push_screen(ProtocolCommandPalette())
+
+    def action_help_quit(self) -> None:
+        for key, active_binding in self.active_bindings.items():
+            if active_binding.binding.action in ("quit", "app.quit"):
+                self.notify(
+                    f"Press [b]{key}[/b] to quit the application.",
+                    title="Quit?",
+                    severity="warning",
+                )
+                return

@@ -3,8 +3,8 @@ from __future__ import annotations
 from textual.command import CommandPalette
 from textual.containers import Vertical
 
-DIRECTIVE_PROMPT = "Найти директиву…"
-DIRECTIVE_TITLE = "ДИРЕКТИВА · search"
+DIRECTIVE_PROMPT = "Search directives…"
+DIRECTIVE_TITLE = "Directive search"
 DIRECTIVE_SUBTITLE = "[ENTER] open  ·  [ESC] cancel"
 
 
